@@ -4,7 +4,6 @@
 typedef struct GameSprite{
 	int code;
 	int x;
-	int y;
 	int w;
 	int h;
 } GameSprite;

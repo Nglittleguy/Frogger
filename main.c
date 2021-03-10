@@ -32,7 +32,7 @@ int main(){
 	
 
 	Game g;
-	generateGame(&g);
+	generateGame(&g, sizeBy12);
 
 	int levelChosen = 0;	
 	for (int y = 0; y < height; y++)
