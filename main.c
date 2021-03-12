@@ -78,11 +78,11 @@ int main(){
 	/* initialize + get FBS */
 	framebufferstruct = initFbInfo();
 	Game g;
-	generateGame(&g, sizeBy12);
-	int levelChosen = 0;	
+	generateGame(&g);
+	int levelChosen = 3;	
 
-	drawBackground(&g);
-	drawSprites();
+	drawBackground(&g, levelChosen);
+	drawSprites(&g, levelChosen);
 	munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
 	
 	return 0;

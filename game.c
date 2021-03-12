@@ -83,14 +83,14 @@ const int spriteColours[4][12][10] =
 		{0, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE}, 
 		{0, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE}, 
 		{FROG, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE},
-	},
-}
+	}
+};
 
 void generateLine(Line* li, int le, int i) {
 
 	for(int k = 0; k<10; k++) {
 		GameSprite s;
-		s.code = spriteColours[le,i,k];
+		s.code = spriteColours[le][i][k];
 		s.x = (k+1)*100;
 		s.w = 30;
 		s.h = 30;
