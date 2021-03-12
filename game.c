@@ -88,7 +88,7 @@ const int spriteColours[4][12][10] =
 
 void generateLine(Line* li, int le, int i) {
 
-	for(int k = 0; k<=10; k++) {
+	for(int k = 0; k<10; k++) {
 		GameSprite s;
 		s.code = spriteColours[le,i,k];
 		s.x = (k+1)*100;
