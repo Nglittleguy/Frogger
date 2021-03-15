@@ -1,99 +1,108 @@
+#include <wiringPi.h>
 #include <stdio.h>
+#include "initGPIO.h"
+#include "pinIO.h"
+#include "controller.h"
+#include <pthread.h>
 #include <stdlib.h>
 #include <sys/mman.h>
 #include "framebuffer.h"
 #include "game.h"
+#include "draw.c"
 
-/* Definitions */
-typedef struct {
-	int colour;
-	int x, y;
-} Pixel;
+/*
+This is the main function for the 359 Project. For now, it is just used to read SNES controller inputs.
+Later functionality will be based around the Frogger game - requiring a separate thread to handle the
+controller inputs. For now though, this should suffice.
+*/
 
-struct fbs framebufferstruct;
-void drawPixel(Pixel *pixel);
+int movement;
+int start;
+int select;
+Game g;
+int cont = 1;									//boolean to continue execution
 
-const int height = 500;
-int sizeBy12 = height/12;
-const int width = 1000;
-const int bWidth = 250;
-const int bHeight = 250;
 
-void drawBackground(Game *g, int levelChosen) {
-	/* initialize a pixel */
-	Pixel *pixel;
-	pixel = malloc(sizeof(Pixel));
-
-	
-	for (int y = 0; y < height; y++)
-	{
-		for (int x = 0; x < width; x++) 
-		{	
-			pixel->x = x+bWidth;
-			pixel->y = y+bHeight ;
-			pixel->colour = g->levels[levelChosen].lines[y/sizeBy12].colour;
-			drawPixel(pixel);
+void *controls(void *param) {
+	unsigned int gpioPtr = (unsigned int *)param;
+	int buttons[16] = {1};						//all button states stored in array						
+	int hold[16] = {0};							//prevents multiple presses while holding (50 cycles gap)
+	int pressed = 1;
+	while(cont){
+		readSNES(gpioPtr, buttons);				//controller functionality
+		
+		for(int i = 0; i<16; i++) {				//read through all button states
+			//for(int j = 0; j<16; j++)
+			//	printf("%d ", buttons[j]);
+			
+			if(buttons[i] != 1) {
+				
+				if(i==3) {						//end execution if "Start"
+					cont = 0;
+					printf("Program is terminating...\n");
+					break;
+				}
+				if(hold[i]==0)	{				//if held spinlock is released, print the message
+					printMessage(i);
+					hold[i] = 1000;				//reset spinlock value
+					pressed = 1;				//if pressed, rewrite the "Press a button"
+				}
+			}
+			if(hold[i]>0)					//decrease spinlock value
+				hold[i]--;
+			
 		}
-		//printf("Colour at %d of %x\n", y, g.levels[levelChosen].lines[y/sizeBy12].colour);
+
+		if(pressed) {
+			printf("Please press a button...\n");
+			pressed = 0;
+		}
+		
 	}
-	/* free pixel's allocated memory */
-	free(pixel);
-	pixel = NULL;
+	pthread_exit(0);
 }
 
-void drawSprites(Game *g, int levelChosen) {
-	/* initialize a pixel */
-	Pixel *pixel;
-	pixel = malloc(sizeof(Pixel));
-	for(int i = 0; i<12; i++) {
-		for(int j = 0; j<10; j++) {
-			if(g->levels[levelChosen].lines[i].sprites[j].code != 0) {	//null spot, don't draw
-				
+int main()
+{
+	printf("Created by: Stephen Ng 30038689\n");
+	printf("Please press a button...\n");
+	// get gpio pointer
+    unsigned int *gpioPtr = getGPIOPtr();  
+	inputGPIO(gpioPtr, 9);
+	inputGPIO(gpioPtr, 10);
+	inputGPIO(gpioPtr, 11);
+	outputGPIO(gpioPtr, 9);
+	outputGPIO(gpioPtr, 11);
+	//initilaizing the GPIO pins
 
-
-				for(int xOff = 0; xOff<30; xOff++) {					//draw sprite
-					for(int yOff = 0; yOff<30; yOff++) {
-						pixel->x = g->levels[levelChosen].lines[i].sprites[j].x + xOff + bWidth;
-						pixel->y = sizeBy12 * i + yOff + bHeight;
-						pixel->colour = g->levels[levelChosen].lines[i].sprites[j].code;
-						drawPixel(pixel);
-					}
-				}
-
-
-
-			}
-		}
-	}
-
-	/* free pixel's allocated memory */
-	free(pixel);
-	pixel = NULL;
-} 
-
-
-/* main function */
-int main(){
-
-	/* initialize + get FBS */
+	struct cValues c;
+	pthread_t cThread;
+	pthread_attr_t cAttr;
+	pthread_attr_init(&cAttr);
+	long check = pthread_create(&cThread, &cAttr, controls, (void*)gpioPtr);
+	if (check != 0) {
+     	printf("Oops, pthread_create returned error code %ld\n", check);
+      	exit(-1);
+    }
+	
 	framebufferstruct = initFbInfo();
-	Game g;
+	
 	generateGame(&g);
 	int levelChosen = 3;	
 
-	drawBackground(&g, levelChosen);
-	drawSprites(&g, levelChosen);
+	while(cont) {
+		drawBackground(&g);
+		drawSprites();
+		delayMicroseconds(42);
+	}
+
 	munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
 	
-	return 0;
+
+    pthread_join(cThread, NULL);
+
+	
+
+
+    return 0;
 }
-
-
-
-/* Draw a pixel */
-void drawPixel(Pixel *pixel){
-	long int location = (pixel->x +framebufferstruct.xOff) * (framebufferstruct.bits/8) +
-                       (pixel->y+framebufferstruct.yOff) * framebufferstruct.lineLength;
-	*((unsigned short int*)(framebufferstruct.fptr + location)) = pixel->colour;
-}
-
