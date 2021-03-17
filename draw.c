@@ -16,6 +16,7 @@ void drawPixel(Pixel *pixel);
 const int height = 500;
 int sizeBy12 = height/12;
 const int width = 1000;
+int widthBy24 = width/24;
 const int bWidth = 250;
 const int bHeight = 250;
 
@@ -47,12 +48,12 @@ void drawSprites(Game *g, int levelChosen) {
 	pixel = malloc(sizeof(Pixel));
 	for(int i = 0; i<12; i++) {
 		for(int j = 0; j<10; j++) {
-			if(g->levels[levelChosen].lines[i].sprites[j].code != 0) {	//null spot, don't draw
+			if(g->levels[levelChosen].lines[i].sprites[j].code != 0) {								//null spot, don't draw
 				
 
 
-				for(int xOff = 0; xOff<30; xOff++) {					//draw sprite
-					for(int yOff = 0; yOff<30; yOff++) {
+				for(int xOff = 0; xOff < widthBy24; xOff++) {										//draw sprite size
+					for(int yOff = 0; yOff < sizeBy12; yOff++) {
 						pixel->x = g->levels[levelChosen].lines[i].sprites[j].x + xOff + bWidth;
 						pixel->y = sizeBy12 * i + yOff + bHeight;
 						pixel->colour = g->levels[levelChosen].lines[i].sprites[j].code;
@@ -70,23 +71,6 @@ void drawSprites(Game *g, int levelChosen) {
 	free(pixel);
 	pixel = NULL;
 } 
-
-
-/* main function */
-int main(){
-
-	/* initialize + get FBS */
-	framebufferstruct = initFbInfo();
-	Game g;
-	generateGame(&g);
-	int levelChosen = 3;	
-
-	drawBackground(&g, levelChosen);
-	drawSprites(&g, levelChosen);
-	munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
-	
-	return 0;
-}
 
 
 

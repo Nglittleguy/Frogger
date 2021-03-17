@@ -11,4 +11,5 @@ void readSNES(unsigned* gpioBase, int* buttons);
 Writes the name of the button that is pressed - arguments: the number of the button pressed
 */
 void printMessage(int i);
+
 #endif

@@ -28,6 +28,7 @@ int levelSelect;
 //void generateSprites(GameSprite* gs);
 void generateLine(Line* li, int le, int i);
 void generateGame(Game* g);
+void movePlayer(Game* g, int le, int w, int press, int sw, int bw);
 
 
 #endif

@@ -70,3 +70,6 @@ void printMessage(int i) {
 	}
 	printf("\n");
 }
+
+
+

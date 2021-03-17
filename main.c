@@ -16,12 +16,17 @@ Later functionality will be based around the Frogger game - requiring a separate
 controller inputs. For now though, this should suffice.
 */
 
-int movement;
-int start;
-int select;
+int press;										//READ: main, WRITE: controller (up down left right start select a)
+int readPress;									//READ: controller, main, WRITE: controller (1), main (0),
 Game g;
-int cont = 1;									//boolean to continue execution
+int cont = 1;									//READ: controller, main, WRITE: main
 
+const int height = 500;
+int sizeBy12 = height/12;
+const int width = 1000;
+int widthBy24 = width/24;
+const int bWidth = 250;
+const int bHeight = 250;
 
 void *controls(void *param) {
 	unsigned int gpioPtr = (unsigned int *)param;
@@ -42,13 +47,15 @@ void *controls(void *param) {
 					printf("Program is terminating...\n");
 					break;
 				}
-				if(hold[i]==0)	{				//if held spinlock is released, print the message
-					printMessage(i);
+				if(hold[i]==0 && readPress)	{	//if held spinlock is released and controller turn to write, 
+												//		print the message
+					press = i;
 					hold[i] = 1000;				//reset spinlock value
 					pressed = 1;				//if pressed, rewrite the "Press a button"
+					readPress = 0;				//have not read this press yet
 				}
 			}
-			if(hold[i]>0)					//decrease spinlock value
+			if(hold[i]>0)						//decrease spinlock value
 				hold[i]--;
 			
 		}
@@ -67,7 +74,7 @@ int main()
 	printf("Created by: Stephen Ng 30038689\n");
 	printf("Please press a button...\n");
 	// get gpio pointer
-    unsigned int *gpioPtr = getGPIOPtr();  
+    unsigned int *gpioPtr = getGPIOPtr();  		//init GPIO Pointer
 	inputGPIO(gpioPtr, 9);
 	inputGPIO(gpioPtr, 10);
 	inputGPIO(gpioPtr, 11);
@@ -87,10 +94,15 @@ int main()
 	
 	framebufferstruct = initFbInfo();
 	
-	generateGame(&g);
-	int levelChosen = 3;	
+	generateGame(&g, widthBy24, sizeBy12, width);
+	int levelChosen = 0;	
 
 	while(cont) {
+		if(!readPress) {
+			movePlayer(&g, levelChosen, width, press, widthBy24, bWidth);
+			readPress = 1;
+		}
+		
 		drawBackground(&g);
 		drawSprites();
 		delayMicroseconds(42);
