@@ -98,7 +98,7 @@ void generateLine(Line* li, int le, int i, int w, int h, int sw) {
 	}
 
 	if(li->sprites[9].code==FROG) {
-		li->sprites[9].x = sw-w/2;							//center the player
+		li->sprites[9].x = w/2-sw;							//center the player
 	}
 
 	li->colour = lineColours[le][i];
@@ -133,17 +133,17 @@ void movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 	switch(press) {
 		case 4:	//UP
 			printf("UP");
-			if(currentLine!=11) {
-				g->levels[le].lines[currentLine+1].sprites[9].code = FROG;
-				g->levels[le].lines[currentLine+1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
+			if(currentLine!=0) {
+				g->levels[le].lines[currentLine-1].sprites[9].code = FROG;
+				g->levels[le].lines[currentLine-1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
 				g->levels[le].lines[currentLine].sprites[9].code = 0;
 			}
 			break;
 		case 5:	//DOWN
 			printf("DOWN");
-			if(currentLine!=0) {
-				g->levels[le].lines[currentLine-1].sprites[9].code = FROG;
-				g->levels[le].lines[currentLine-1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
+			if(currentLine!=11) {
+				g->levels[le].lines[currentLine+1].sprites[9].code = FROG;
+				g->levels[le].lines[currentLine+1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
 				g->levels[le].lines[currentLine].sprites[9].code = 0;
 			}
 			break;
@@ -161,6 +161,7 @@ void movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 			break;
 	}
 }
+
 
 
 

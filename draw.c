@@ -3,6 +3,7 @@
 #include <sys/mman.h>
 #include "framebuffer.h"
 #include "game.h"
+#include "draw.h"
 
 static const int height = 500;
 static int sizeBy12 = height/12;
