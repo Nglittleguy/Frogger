@@ -26,8 +26,8 @@ typedef struct Game {
 
 int levelSelect;
 //void generateSprites(GameSprite* gs);
-void generateLine(Line* li, int le, int i);
-void generateGame(Game* g);
+void generateLine(Line* li, int le, int i, int w, int h, int sw);
+void generateGame(Game* g, int w, int h, int sw);
 void movePlayer(Game* g, int le, int w, int press, int sw, int bw);
 
 

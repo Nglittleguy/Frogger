@@ -4,21 +4,12 @@
 #include "framebuffer.h"
 #include "game.h"
 
-/* Definitions */
-typedef struct {
-	int colour;
-	int x, y;
-} Pixel;
-
-struct fbs framebufferstruct;
-void drawPixel(Pixel *pixel);
-
-const int height = 500;
-int sizeBy12 = height/12;
-const int width = 1000;
-int widthBy24 = width/24;
-const int bWidth = 250;
-const int bHeight = 250;
+static const int height = 500;
+static int sizeBy12 = height/12;
+static const int width = 1000;
+static int widthBy24 = width/24;
+static const int bWidth = 250;
+static const int bHeight = 250;
 
 void drawBackground(Game *g, int levelChosen) {
 	/* initialize a pixel */
