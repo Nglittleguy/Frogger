@@ -15,14 +15,16 @@
 #define GRAY 0x9492
 #define SKYBLUE 0x56BF
 // http://www.barth-dev.de/online/rgb565-color-picker/
+const int n = 12;
+const int distTravelled = 2;
 
-const int lineColours[4][12] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GREEN},
+const int lineColours[4][n] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GREEN},
 								{GREEN, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN},
 								{GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, GRAY},
 								{GRAY, GRAY, RED, GREEN, RED, GRAY, GRAY, GREEN, CYAN, RED, GRAY, GRAY}};
 
 
-const int spriteColours[4][12][10] = 
+const int spriteColours[4][n][10] = 
 {
 	{
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
@@ -102,10 +104,10 @@ void generateLine(Line* li, int le, int i, int w, int h, int sw) {
 	}
 
 	li->colour = lineColours[le][i];
-	if(i==0 || i ==11 || (le%2==0 && i%3==0))
+	if(i==0 || i ==n-1 || (le%2==0 && i%3==0))
 		li->direction = 0;
 	else
-		li->direction = ((i+le+1)*(i+le+2))%3-1;
+		li->direction = ((i+le+1)*(i+le+2))%2*2-1;			//either 1, -1
 }
 
 
@@ -113,7 +115,7 @@ void generateGame(Game* g, int w, int h, int sw) {
 
 	for(int i = 0; i<4; i++) {
 		Level le;
-		for(int j = 0; j<12; j++) {
+		for(int j = 0; j<n; j++) {
 			Line li;
 			generateLine(&li, i, j, w, h, sw);
 			le.lines[j] = li;
@@ -126,7 +128,7 @@ void generateGame(Game* g, int w, int h, int sw) {
 
 void movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 	int currentLine;
-	for(int i = 0; i<12; i++) {
+	for(int i = 0; i<n; i++) {
 		if(g->levels[le].lines[i].sprites[9].code==FROG)
 			currentLine = i;
 	}
@@ -159,6 +161,17 @@ void movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 				g->levels[le].lines[currentLine].sprites[9].x += sw;
 			}
 			break;
+	}
+}
+
+void updateTime(Game* g, int le, int w, int bw) {
+	for(int i = 0; i<n; i++) {
+		for(GameSprite s:g->levels[le].lines[i].sprites) {
+			if(s.code == FROG && le==0) {
+				continue;
+			}
+			s.x += g->levels[le].direction * distTravelled;
+		}
 	}
 }
 

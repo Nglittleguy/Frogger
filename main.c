@@ -96,7 +96,7 @@ int main()
 			movePlayer(&g, levelChosen, 1000, press, 1000/24, 250); //ISSUE - constants not working
 			readPress = 1;
 		}
-		
+		updateTime(&g, levelChosen, 1000, 250);
 		drawBackground(&g, levelChosen);
 		drawSprites(&g, levelChosen);
 		delayMicroseconds(42);

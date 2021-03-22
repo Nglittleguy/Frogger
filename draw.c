@@ -68,8 +68,14 @@ void drawSprites(Game *g, int levelChosen) {
 
 /* Draw a pixel */
 void drawPixel(Pixel *pixel){
-	long int location = (pixel->x +framebufferstruct.xOff) * (framebufferstruct.bits/8) +
+	//comment out to see beyond boundaries
+	//if(pixel->x < bWidth + width && pixel->x > bWidth && pixel->y > bHeight && pixel->y < bHeight + height) {	
+		long int location = (pixel->x +framebufferstruct.xOff) * (framebufferstruct.bits/8) +
                        (pixel->y+framebufferstruct.yOff) * framebufferstruct.lineLength;
-	*((unsigned short int*)(framebufferstruct.fptr + location)) = pixel->colour;
+    	if(*((unsigned short int*)(framebufferstruct.fptr + location))!=pixel->colour)				//only draw if different
+			*((unsigned short int*)(framebufferstruct.fptr + location)) = pixel->colour;
+
+	//}
+	
 }
 
