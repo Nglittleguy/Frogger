@@ -9,6 +9,7 @@
 #include "framebuffer.h"
 #include "game.h"
 #include "draw.h"
+#include "var.h"
 
 /*
 This is the main function for the 359 Project. For now, it is just used to read SNES controller inputs.
@@ -20,6 +21,26 @@ int press;										//READ: main, WRITE: controller (up down left right start se
 int readPress;									//READ: controller, main, WRITE: controller (1), main (0),
 Game g;
 int cont = 1;									//READ: controller, main, WRITE: main
+int timeLimit = 500;
+int time = timeLimit;
+int paused = 0;				
+
+const int height = 500;
+int sizeBy12 = height/12;
+const int width = 1000;
+int widthBy24 = width/24;
+const int bWidth = 250;
+const int bHeight = 250;
+
+void *timingClock(void *param) {
+	while(cont) {
+		if(time==0) 
+			cont = 0;							//end the game
+		while(paused);
+		time--;
+		delayMicroseconds(10000);
+	}
+}
 
 void *controls(void *param) {
 	//unsigned int *gpioPtr = (unsigned int *)param;
@@ -85,20 +106,39 @@ int main()
      	printf("Oops, pthread_create returned error code %ld\n", check);
       	exit(-1);
     }
+
+    pthread_t clThread;
+    pthread_attr_t clAttr;
+    pthread-attr_inti(&clAttr);
+    check = pthread_create(&clThread, &clAttr, timingClock, NULL);
+    if (check != 0) {
+     	printf("Oops, pthread_create returned error code %ld\n", check);
+      	exit(-1);
+    }
+
 	
 	framebufferstruct = initFbInfo();
 
-	generateGame(&g, 1000, 500, 1000/24);		//ISSUE - constants not working
+	generateGame(&g, width, height, widthBy24);		//ISSUE - constants not working
 	int levelChosen = 0;	
 
 	while(cont) {
 		if(!readPress) {
-			movePlayer(&g, levelChosen, 1000, press, 1000/24, 250); //ISSUE - constants not working
+			if(press == 3) {
+				paused = 1;						//enter pause menu here
+
+			}
+			if(!paused) {
+				movePlayer(&g, levelChosen, width, press, widthBy24, bWidth); //ISSUE - constants not working
+			}
 			readPress = 1;
 		}
-		updateTime(&g, levelChosen, 1000, 250);
+		if(!paused) {
+			updateTime(&g, levelChosen, width, bWidth);
+		}
 		drawBackground(&g, levelChosen);
 		drawSprites(&g, levelChosen);
+		drawTime(time, timeLimit);
 		delayMicroseconds(42);
 	}
 
@@ -106,6 +146,7 @@ int main()
 	
 
    	pthread_join(cThread, NULL);
+   	pthread_join(clThread, NULL);
 
 	
 

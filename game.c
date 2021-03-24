@@ -105,7 +105,7 @@ void generateLine(Line* li, int le, int i, int w, int h, int sw) {
 
 	li->colour = lineColours[le][i];
 	if(i==0 || i ==n-1 || (le%2==0 && i%3==0))
-		li->direction = 0;
+		li->direction = 0;									//stationary sections
 	else
 		li->direction = ((i+le+1)*(i+le+2))%2*2-1;			//either 1, -1
 }

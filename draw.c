@@ -4,13 +4,8 @@
 #include "framebuffer.h"
 #include "game.h"
 #include "draw.h"
+#include "var.h"
 
-static const int height = 500;
-static int sizeBy12 = height/12;
-static const int width = 1000;
-static int widthBy24 = width/24;
-static const int bWidth = 250;
-static const int bHeight = 250;
 
 void drawBackground(Game *g, int levelChosen) {
 	/* initialize a pixel */
@@ -63,6 +58,33 @@ void drawSprites(Game *g, int levelChosen) {
 	free(pixel);
 	pixel = NULL;
 } 
+
+
+void drawTime(int t, int tl) {
+	Pixel *pixel;
+	pixel = malloc(sizeof(Pixel));
+	for(int j = 0; j<tl; j++) {
+		pixel->x = bWidth+width-tl+j;
+		if(tl-j>t) {
+			pixel->colour = 0x0000;
+			for(int i = 0; i<20; i++) {
+				pixel->y = bHeight-i;
+				drawPixel(pixel);
+			}
+		}
+		else {
+			pixel->colour = 0xFFFF;
+			for(int i = 0; i<20; i++) {
+				pixel->y = bHeight-i;
+				drawPixel(pixel);
+			}
+		}
+	}
+	
+	/* free pixel's allocated memory */
+	free(pixel);
+	pixel = NULL;
+}
 
 
 
