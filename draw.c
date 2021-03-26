@@ -94,8 +94,9 @@ void drawPixel(Pixel *pixel){
 	//if(pixel->x < bWidth + width && pixel->x > bWidth && pixel->y > bHeight && pixel->y < bHeight + height) {	
 		long int location = (pixel->x +framebufferstruct.xOff) * (framebufferstruct.bits/8) +
                        (pixel->y+framebufferstruct.yOff) * framebufferstruct.lineLength;
-    	if(*((unsigned short int*)(framebufferstruct.fptr + location))!=pixel->colour)				//only draw if different
+    	if(*((unsigned short int*)(framebufferstruct.fptr + location))!=pixel->colour)		{		//only draw if different
 			*((unsigned short int*)(framebufferstruct.fptr + location)) = pixel->colour;
+		}
 
 	//}
 	

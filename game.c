@@ -16,15 +16,15 @@
 #define SKYBLUE 0x56BF
 // http://www.barth-dev.de/online/rgb565-color-picker/
 const int n = 12;
-const int distTravelled = 2;
+const int distTravelled = 10;
 
-const int lineColours[4][n] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GREEN},
+const int lineColours[4][12] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GREEN},
 								{GREEN, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN},
 								{GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, GRAY},
 								{GRAY, GRAY, RED, GREEN, RED, GRAY, GRAY, GREEN, CYAN, RED, GRAY, GRAY}};
 
 
-const int spriteColours[4][n][10] = 
+const int spriteColours[4][12][10] = 
 {
 	{
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
@@ -104,10 +104,10 @@ void generateLine(Line* li, int le, int i, int w, int h, int sw) {
 	}
 
 	li->colour = lineColours[le][i];
-	if(i==0 || i ==n-1 || (le%2==0 && i%3==0))
+	if(i==0 || i ==n-1 || (le==1 && i%3==0))
 		li->direction = 0;									//stationary sections
 	else
-		li->direction = ((i+le+1)*(i+le+2))%2*2-1;			//either 1, -1
+		li->direction = ((i+le+1)%2)*2-1;			//either 1, -1
 }
 
 
@@ -166,11 +166,11 @@ void movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 
 void updateTime(Game* g, int le, int w, int bw) {
 	for(int i = 0; i<n; i++) {
-		for(GameSprite s:g->levels[le].lines[i].sprites) {
-			if(s.code == FROG && le==0) {
+		for(int j = 0; j<10; j++) {
+			if(g->levels[le].lines[i].sprites[j].code == FROG && le==0) {	//don't move for levels 0 and 3
 				continue;
 			}
-			s.x += g->levels[le].direction * distTravelled;
+			g->levels[le].lines[i].sprites[j].x += g->levels[le].lines[i].direction * distTravelled;
 		}
 	}
 }

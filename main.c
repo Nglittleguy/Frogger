@@ -21,25 +21,26 @@ int press;										//READ: main, WRITE: controller (up down left right start se
 int readPress;									//READ: controller, main, WRITE: controller (1), main (0),
 Game g;
 int cont = 1;									//READ: controller, main, WRITE: main
-int timeLimit = 500;
-int time = timeLimit;
+const int timeLimit = 500;
+int t = timeLimit;
 int paused = 0;				
 
 const int height = 500;
-int sizeBy12 = height/12;
+const int sizeBy12 = height/12;
 const int width = 1000;
-int widthBy24 = width/24;
+const int widthBy24 = width/24;
 const int bWidth = 250;
 const int bHeight = 250;
 
 void *timingClock(void *param) {
 	while(cont) {
-		if(time==0) 
+		if(t==0) 
 			cont = 0;							//end the game
 		while(paused);
-		time--;
+		t--;
 		delayMicroseconds(10000);
 	}
+	pthread_exit(0);
 }
 
 void *controls(void *param) {
@@ -109,7 +110,7 @@ int main()
 
     pthread_t clThread;
     pthread_attr_t clAttr;
-    pthread-attr_inti(&clAttr);
+    pthread_attr_init(&clAttr);
     check = pthread_create(&clThread, &clAttr, timingClock, NULL);
     if (check != 0) {
      	printf("Oops, pthread_create returned error code %ld\n", check);
@@ -138,7 +139,7 @@ int main()
 		}
 		drawBackground(&g, levelChosen);
 		drawSprites(&g, levelChosen);
-		drawTime(time, timeLimit);
+		drawTime(t, timeLimit);
 		delayMicroseconds(42);
 	}
 
