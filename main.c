@@ -25,12 +25,12 @@ const int timeLimit = 500;
 int t = timeLimit;
 int paused = 0;				
 
-const int height = 500;
-const int sizeBy12 = height/12;
+const int height = 720;
+const int sizeBy24 = height/24;
 const int width = 1000;
 const int widthBy24 = width/24;
 const int bWidth = 250;
-const int bHeight = 250;
+const int bHeight = 100;
 
 void *timingClock(void *param) {
 	while(cont) {
@@ -136,6 +136,7 @@ int main()
 		}
 		if(!paused) {
 			updateTime(&g, levelChosen, width, bWidth);
+			preventFlicker(&g);
 		}
 		drawBackground(&g, levelChosen);
 		drawSprites(&g, levelChosen);

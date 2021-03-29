@@ -10,10 +10,12 @@ typedef struct {
 	int x, y;
 } Pixel;
 
+int oldColour[1000][720];
 struct fbs framebufferstruct;
 void drawPixel(Pixel *pixel);
 void drawBackground(Game *g, int levelChosen);
 void drawSprites(Game *g, int levelChosen);
 void drawTime(int t, int tl);
+void preventFlicker(Game *g);
 
 
