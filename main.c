@@ -23,7 +23,9 @@ Game g;
 int cont = 1;									//READ: controller, main, WRITE: main
 const int timeLimit = 500;
 int t = timeLimit;
-int paused = 0;				
+int paused = 0;			
+int lives = 5;
+int movesLeft = 500;	
 
 const int height = 720;
 const int sizeBy24 = height/24;
@@ -34,7 +36,7 @@ const int bHeight = 100;
 
 void *timingClock(void *param) {
 	while(cont) {
-		if(t==0) 
+		if(t==0 || movesLeft==0 || lives == 0) 
 			cont = 0;							//end the game
 		while(paused);
 		t--;
@@ -77,6 +79,7 @@ void *controls(void *param) {
 					hold[i] = 1000;				//reset spinlock value
 					pressed = 1;				//if pressed, rewrite the "Press a button"
 					readPress = 0;				//have not read this press yet
+					movesLeft--;
 				}
 			}
 			if(hold[i]>0)						//decrease spinlock value
@@ -92,6 +95,7 @@ void *controls(void *param) {
 	}
 	pthread_exit(0);
 }
+
 
 int main()
 {
@@ -122,6 +126,7 @@ int main()
 
 	generateGame(&g, width, height, widthBy24);		//ISSUE - constants not working
 	int levelChosen = 0;	
+	int currentLine = 0;
 
 	while(cont) {
 		if(!readPress) {
@@ -130,13 +135,17 @@ int main()
 
 			}
 			if(!paused) {
-				movePlayer(&g, levelChosen, width, press, widthBy24, bWidth); //ISSUE - constants not working
+				currentLine = movePlayer(&g, levelChosen, width, press, widthBy24, bWidth); 
 			}
 			readPress = 1;
 		}
 		if(!paused) {
-			updateTime(&g, levelChosen, width, bWidth);
-			preventFlicker(&g);
+			if(updateTime(&g, levelChosen, width, bWidth, widthBy24, currentLine)==0) {
+				// dead
+				lives--;
+				movetoStart(&g, levelChosen, width, widthBy24, currentLine);
+			}
+
 		}
 		drawBackground(&g, levelChosen);
 		drawSprites(&g, levelChosen);
