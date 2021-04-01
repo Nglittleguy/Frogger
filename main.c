@@ -140,6 +140,7 @@ int main()
 		}
 		drawBackground(&g, levelChosen);
 		drawSprites(&g, levelChosen);
+		drawTotal();
 		drawTime(t, timeLimit);
 		delayMicroseconds(42);
 	}
