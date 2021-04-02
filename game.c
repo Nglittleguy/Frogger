@@ -196,7 +196,7 @@ void moveToStart(Game *g, int le, int w, int sw, int frog) {
 }
 
 
-int collision(Game* g, int le, int sw, int frog) {
+int collision(Game* g, int le, int sw, int currLine, int frog) {
 	int alive;
 	int bounds;
 	switch(le) {
@@ -206,7 +206,7 @@ int collision(Game* g, int le, int sw, int frog) {
 		case 3:
 			alive = 1;
 			for(int i = 0; i<10; i++) {
-				bounds = g->levels[le].lines[frog].sprites[i].x  	//only need to check line with frog
+				bounds = g->levels[le].lines[currLine].sprites[i].x  	//only need to check line with frog
  				if(bounds < frog+sw && bounds+2*sw > frog)	{		
 					alive = 0;
 				}
@@ -217,8 +217,10 @@ int collision(Game* g, int le, int sw, int frog) {
 		case 1:
 		case 2:
 			alive = 0;
+			if(g->levels[le].lines[currLine].direction==0)
+				return true;
 			for(int i = 0; i<10; i++) {
-				bounds = g->levels[le].lines[frog].sprites[i].x  	//only need to check line with frog
+				bounds = g->levels[le].lines[currLine].sprites[i].x  	//only need to check line with frog
  				if(bounds < frog+sw && bounds+2*sw > frog)	{		
 					alive = 1;
 				}
@@ -285,7 +287,7 @@ int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine) {
 			
 		}
 	}
-	return collision(&g, le, w, sw, g->levels[le].lines[currentLine].sprites[9].x);
+	return collision(&g, le, w, sw, currentLine, g->levels[le].lines[currentLine].sprites[9].x);
 }
 
 

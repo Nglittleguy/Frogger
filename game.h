@@ -29,7 +29,7 @@ int levelSelect;
 void generateLine(Line* li, int le, int i, int w, int h, int sw);
 void generateGame(Game* g, int w, int h, int sw);
 void moveToStart(Game *g, int le, int w, int sw, int frog);
-int collision(Game* g, int le, int sw, int frog);
+int collision(Game* g, int le, int sw, int currLine, int frog);
 int movePlayer(Game* g, int le, int w, int press, int sw, int bw);
 int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine);
 
