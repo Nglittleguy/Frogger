@@ -28,7 +28,7 @@ const int lineColours[4][24] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY
 								GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, GRAY},
 								
 								{GRAY, GRAY, RED, GREEN, RED, GRAY, GRAY, GREEN, CYAN, RED, GRAY, GRAY,
-								GRAY, GRAY, RED, GREEN, RED, GRAY, GRAY, GREEN, CYAN, RED, GRAY, GRAY,}};
+								GRAY, GRAY, RED, GREEN, RED, GRAY, GRAY, GREEN, CYAN, RED, GRAY, GRAY}};
 
 
 const int spriteColours[4][24][10] = 
@@ -45,9 +45,9 @@ const int spriteColours[4][24][10] =
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0},
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+
+		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0},  
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0},  
@@ -58,7 +58,7 @@ const int spriteColours[4][24][10] =
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
 		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG}, 
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG} 
 	},
 
 	{
@@ -86,7 +86,7 @@ const int spriteColours[4][24][10] =
 		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0},
 		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
 		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG}, 
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG} 
 	},
 
 	{
@@ -112,10 +112,8 @@ const int spriteColours[4][24][10] =
 		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
 		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
 		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
 		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0},  
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG}, 
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG} 
 	},
 	
 
@@ -143,7 +141,7 @@ const int spriteColours[4][24][10] =
 		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
 		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
 		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, FROG},
+		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, FROG}
 	},
 };
 
@@ -152,7 +150,7 @@ void generateLine(Line* li, int le, int i, int w, int h, int sw) {
 	for(int k = 0; k<10; k++) {
 		GameSprite s;
 		s.code = spriteColours[le][i][k];
-		s.x = (k+1)*100 + ((k+le+i)%4)*sw;
+		s.x = (k+1)*100 + 6*(k%4)*sw;
 		if(s.code==FROG)
 			s.w = sw;
 		else
@@ -190,7 +188,7 @@ void generateGame(Game* g, int w, int h, int sw) {
 
 
 void moveToStart(Game *g, int le, int w, int sw, int frog) {
-	g->levels[le].lines[currentLine].sprites[9].code = 0;
+	g->levels[le].lines[frog].sprites[9].code = 0;
 	g->levels[le].lines[23].sprites[9].code = FROG;
 	g->levels[le].lines[23].sprites[9].x = w/2-sw;
 }
@@ -205,8 +203,10 @@ int collision(Game* g, int le, int sw, int currLine, int frog) {
 		case 0:
 		case 3:
 			alive = 1;
-			for(int i = 0; i<10; i++) {
-				bounds = g->levels[le].lines[currLine].sprites[i].x  	//only need to check line with frog
+			if(g->levels[le].lines[currLine].direction==0)
+				return 1;
+			for(int i = 0; i<9; i++) {
+				bounds = g->levels[le].lines[currLine].sprites[i].x;  	//only need to check line with frog
  				if(bounds < frog+sw && bounds+2*sw > frog)	{		
 					alive = 0;
 				}
@@ -218,9 +218,9 @@ int collision(Game* g, int le, int sw, int currLine, int frog) {
 		case 2:
 			alive = 0;
 			if(g->levels[le].lines[currLine].direction==0)
-				return true;
-			for(int i = 0; i<10; i++) {
-				bounds = g->levels[le].lines[currLine].sprites[i].x  	//only need to check line with frog
+				return 1;
+			for(int i = 0; i<9; i++) {
+				bounds = g->levels[le].lines[currLine].sprites[i].x;  	//only need to check line with frog
  				if(bounds < frog+sw && bounds+2*sw > frog)	{		
 					alive = 1;
 				}
@@ -250,7 +250,7 @@ int movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 			break;
 		case 5:	//DOWN
 			printf("DOWN");
-			if(currentLine!=11) {
+			if(currentLine!=23) {
 				g->levels[le].lines[currentLine+1].sprites[9].code = FROG;
 				g->levels[le].lines[currentLine+1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
 				g->levels[le].lines[currentLine].sprites[9].code = 0;
@@ -281,13 +281,13 @@ int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine) {
 				continue;
 			}
 			g->levels[le].lines[i].sprites[j].x += g->levels[le].lines[i].direction * distTravelled;
-			if(g->levels[le].lines[i].sprites[j].x == 0) {
+			if(g->levels[le].lines[i].sprites[j].x <= 0) {
 				g->levels[le].lines[i].sprites[j].x = 1300;				//loop em
 			}
 			
 		}
 	}
-	return collision(&g, le, w, sw, currentLine, g->levels[le].lines[currentLine].sprites[9].x);
+	return collision(g, le, sw, currentLine, g->levels[le].lines[currentLine].sprites[9].x);
 }
 
 

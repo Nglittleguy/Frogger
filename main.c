@@ -29,18 +29,19 @@ int movesLeft = 500;
 
 const int height = 720;
 const int sizeBy24 = height/24;
-const int width = 1000;
+const int width = 1280;
 const int widthBy24 = width/24;
 const int bWidth = 250;
 const int bHeight = 100;
 
 void *timingClock(void *param) {
+	printf("Time %d\n", t);
 	while(cont) {
 		if(t==0 || movesLeft==0 || lives == 0) 
 			cont = 0;							//end the game
 		while(paused);
 		t--;
-		delayMicroseconds(10000);
+		delayMicroseconds(100000);
 	}
 	pthread_exit(0);
 }
@@ -127,7 +128,6 @@ int main()
 	generateGame(&g, width, height, widthBy24);		//ISSUE - constants not working
 	int levelChosen = 0;	
 	int currentLine = 0;
-
 	while(cont) {
 		if(!readPress) {
 			if(press == 3) {
@@ -143,7 +143,8 @@ int main()
 			if(updateTime(&g, levelChosen, width, bWidth, widthBy24, currentLine)==0) {
 				// dead
 				lives--;
-				movetoStart(&g, levelChosen, width, widthBy24, currentLine);
+				moveToStart(&g, levelChosen, width, widthBy24, currentLine);
+				currentLine = 23;
 			}
 
 		}

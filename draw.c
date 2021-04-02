@@ -13,15 +13,15 @@ void drawTotal() {
 	pixel = malloc(sizeof(Pixel));
 	for(int y = 0; y<height; y++) {
 		for(int x = 0; x<width; x++) {
-			long int location = (x +framebufferstruct.xOff) * (framebufferstruct.bits/8) +
-                       (y+framebufferstruct.yOff) * framebufferstruct.lineLength;
-            if(*((unsigned short int*)(framebufferstruct.fptr + location))!=oldColour[x][y]) {		//only redraw background
-				oldColour[x][y] = 0;
+			// long int location = (x +framebufferstruct.xOff) * (framebufferstruct.bits/8) +
+   //                     (y+framebufferstruct.yOff) * framebufferstruct.lineLength;
+   //          if(*((unsigned short int*)(framebufferstruct.fptr + location))!=oldColour[x][y]) {		//only redraw background
+				
 				pixel->x = x+bWidth;
 				pixel->y = y+bHeight ;
-				pixel->colour = g->levels[levelChosen].lines[y/sizeBy24].colour;
-				drawPixel(pixel);																	//if not going to be colour
-			}
+				pixel->colour = oldColour[x][y];
+				drawPixel(pixel);	
+			//}
 		}
 	}
 	free(pixel);
@@ -29,42 +29,35 @@ void drawTotal() {
 }
 
 void drawBackground(Game *g, int levelChosen) {
-	/* initialize a pixel */
-	Pixel *pixel;
-	pixel = malloc(sizeof(Pixel));
 
-	
-	for (int y = 0; y < height; y++)
-	{
+	for (int y = 0; y < height; y++) {
 		for (int x = 0; x < width; x++) 
 			oldColour[x][y] = g->levels[levelChosen].lines[y/sizeBy24].colour;
 	}
-	/* free pixel's allocated memory */
-	free(pixel);
-	pixel = NULL;
+
 }
 
 void drawSprites(Game *g, int levelChosen) {
-	/* initialize a pixel */
-	Pixel *pixel;
-	pixel = malloc(sizeof(Pixel));
+	int w;
 	for(int i = 0; i<24; i++) {
 		for(int j = 0; j<10; j++) {
 			if(g->levels[levelChosen].lines[i].sprites[j].code != 0) {								//null spot, don't draw
-				
-				for(int xOff = 0; xOff < widthBy24; xOff++) {										//draw sprite size
+				if(j==9)
+					w = widthBy24;
+				else
+					w = widthBy24*2;
+				for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
 					for(int yOff = 0; yOff < sizeBy24; yOff++) {
-						oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+						if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720) {
+							oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
 							= g->levels[levelChosen].lines[i].sprites[j].code;
+						}
+						
 					}
 				}
 			}
 		}
 	}
-
-	/* free pixel's allocated memory */
-	free(pixel);
-	pixel = NULL;
 } 
 
 

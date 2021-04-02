@@ -16,7 +16,7 @@ typedef struct Line {
 
 typedef struct Level {
 	int code;
-	Line lines[12];
+	Line lines[24];
 } Level;
 
 typedef struct Game {
