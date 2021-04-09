@@ -24,8 +24,8 @@ const int lineColours[4][24] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY
 								{GREEN, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN,
 								GREEN, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN},
 								
-								{GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, GRAY,
-								GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, GRAY},
+								{GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE,
+								GRAY, GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, GRAY},
 								
 								{GRAY, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GRAY, GREEN, GREEN,
 								GRAY, GRAY, RED, GREEN, RED, GRAY, GRAY, GREEN, CYAN, RED, GRAY, GRAY}};
@@ -56,7 +56,7 @@ const int spriteStart[24][10] =
 	{0, 250, 500, 800, 1200, 1500, 1900, 2200, 2800, 3300},
 	{50, 550, 700, 1050, 1250, 1550, 2000, 2300, 2600, 3000},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-}
+};
 
 
 const int spriteColours[4][24][10] = 
@@ -277,7 +277,7 @@ int movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 	}
 	switch(press) {
 		case 4:	//UP
-			printf("UP");
+			//printf("UP");
 			if(currentLine!=0) {
 				g->levels[le].lines[currentLine-1].sprites[9].code = FROG;
 				g->levels[le].lines[currentLine-1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
@@ -288,9 +288,12 @@ int movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 				changeLevel(g, le, 1);
 				return 23;
 			}
+			else if(le==3) {
+				return 23;
+			}
 			break;
 		case 5:	//DOWN
-			printf("DOWN");
+			//printf("DOWN");
 			if(currentLine!=23) {
 				g->levels[le].lines[currentLine+1].sprites[9].code = FROG;
 				g->levels[le].lines[currentLine+1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
@@ -303,14 +306,14 @@ int movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 			}
 			break;
 		case 6: //LEFT
-			printf("LEFT");
-			if(g->levels[le].lines[currentLine].sprites[9].x - sw >= bw) {
+			//printf("LEFT");
+			if(g->levels[le].lines[currentLine].sprites[9].x - sw >= 0) {
 				g->levels[le].lines[currentLine].sprites[9].x -= sw;
 			}
 			break;
 		case 7: //RIGHT
-			printf("RIGHT");
-			if(g->levels[le].lines[currentLine].sprites[9].x + sw <= bw + w) {
+			//printf("RIGHT");
+			if(g->levels[le].lines[currentLine].sprites[9].x + sw <= w) {
 				g->levels[le].lines[currentLine].sprites[9].x += sw;
 			}
 			break;
@@ -321,10 +324,10 @@ int movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 
 void changeLevel(Game* g, int le, int up) {
 	if(up) {
-		g->levels[le+1].line[23].sprites[9].x = g->levels[le].line[0].sprites[9].x;
+		g->levels[le+1].lines[23].sprites[9].x = g->levels[le].lines[0].sprites[9].x;
 	}
 	else {
-		g->levels[le].line[0].sprites[9].x = g->levels[le-1].line[23].sprites[9].x;
+		g->levels[le-1].lines[0].sprites[9].x = g->levels[le].lines[23].sprites[9].x;
 	}
 
 }
@@ -341,6 +344,13 @@ int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine) {
 			
 			else if(g->levels[le].lines[i].sprites[j].x >= 3500)
 				g->levels[le].lines[i].sprites[j].x = 0;				//loop down
+
+			if(g->levels[le].lines[currentLine].sprites[9].x < 0) {
+				g->levels[le].lines[currentLine].sprites[9].x += distTravelled;
+			}
+			if(g->levels[le].lines[currentLine].sprites[9].x + sw > w) {
+				g->levels[le].lines[currentLine].sprites[9].x -= distTravelled;
+			}
 			
 		}
 	}
@@ -357,7 +367,7 @@ void removePowerUp(Game* g) {
 	g->powerUp.x = 3000;
 }
 
-int collectPowerUp(Game* g, int currentLine, int le) {
+int collectPowerUp(Game* g, int currentLine, int le, int sw) {
 	if(g->powerUpLine == currentLine) {
 		int frog = g->levels[le].lines[currentLine].sprites[9].x;
 		if(g->powerUp.x < frog+sw && g->powerUp.x+2*sw > frog)	

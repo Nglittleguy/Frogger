@@ -5,6 +5,7 @@
 #include "game.h"
 #include "draw.h"
 #include "var.h"
+#include <string.h>
 
 int oldColour[1280][720];
 

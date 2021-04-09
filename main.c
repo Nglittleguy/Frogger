@@ -21,7 +21,7 @@ int press;										//READ: main, WRITE: controller (up down left right start se
 int readPress;									//READ: controller, main, WRITE: controller (1), main (0),
 Game g;
 int cont = 1;									//READ: controller, main, WRITE: main
-const int timeLimit = 500;
+const int timeLimit = 2000;
 int t = timeLimit; 								//READ: main, WRITE: timingClock
 int timeWait = 0;								//READ: main, controller, WRITE: main
 int timeTill = 0;								//READ: main, controller, WRITE: main
@@ -107,7 +107,7 @@ void *controls(void *param) {
 		}
 
 		if(pressed) {
-			printf("Please press a button...\n");
+			//printf("Please press a button...\n");
 			pressed = 0;
 		}
 		
@@ -145,20 +145,19 @@ int main()
 
 	generateGame(&g, width, height, widthBy24);		//ISSUE - constants not working
 	int levelChosen = 0;	
-	int currentLine = 0;
+	int currentLine = 23;
 	int updateLevel = 0;
 	int noPowerTimeYet = 1;
-	int oldLine = 0;
+	int oldLine = 23;
 	int goBackToLoop = 0;
-
 	while(cont) {
 		if(updateLevel != 0) {					//inbetween levels
 			drawClearMem();
-			if(levelChosen<4)
+			if(levelChosen<3)
 				levelChosen+=updateLevel;
 			else {
-				printf("WINNER!!!!");
-				cont = false;
+				printf("WINNER!!!! %d - %d - %d", t, movesLeft, lives);
+				cont = 0;
 			}
 
 			if(powerUpOnScreen) {
@@ -202,7 +201,7 @@ int main()
 				currentLine = 23;
 			}
 			if(powerUpOnScreen) {
-				if(collectPowerUp(&g, currentLine, levelChosen)) {
+				if(collectPowerUp(&g, currentLine, levelChosen, widthBy24)) {
 					removePowerUp(&g);
 					powerUpOnScreen = 0;
 					poweredUp = 1;
