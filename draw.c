@@ -18,7 +18,7 @@ void drawTotal() {
    //          if(*((unsigned short int*)(framebufferstruct.fptr + location))!=oldColour[x][y]) {		//only redraw background
 				
 				pixel->x = x+bWidth;
-				pixel->y = y+bHeight ;
+				pixel->y = y+bHeight;
 				pixel->colour = oldColour[x][y];
 				drawPixel(pixel);	
 			//}
@@ -60,6 +60,17 @@ void drawSprites(Game *g, int levelChosen) {
 	}
 } 
 
+void drawPowerUp(Game* g) {
+	for(int xOff = 0; xOff < widthBy24; xOff++) {
+		for(int yOff = 0; yOff < sizeBy24; yOff++) {
+			if(g->powerUp.x + xOff < 1280 && sizeBy24 * g->powerUpLine + yOff<720) {
+				oldColour[g->powerUp.x + xOff][sizeBy24 * g->powerUpLine + yOff] 
+				= g->powerUp.code;
+			}
+		}
+	}
+}
+
 
 void drawTime(int t, int tl) {
 	Pixel *pixel;
@@ -87,6 +98,23 @@ void drawTime(int t, int tl) {
 	pixel = NULL;
 }
 
+
+void drawBlank() {
+	Pixel *pixel;
+	pixel = malloc(sizeof(Pixel));
+	for(int y = 0; y<height; y++) {
+		for(int x = 0; x<width; x++) {
+			pixel->x = x+bWidth;
+			pixel->y = y+bHeight;
+			pixel->colour = 0;
+			drawPixel(pixel);
+		}
+	}	
+}
+
+void drawClearMem() {
+	memset(oldColour, 0, sizeof(oldColour));
+}
 
 
 /* Draw a pixel */

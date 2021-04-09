@@ -22,10 +22,16 @@ int readPress;									//READ: controller, main, WRITE: controller (1), main (0)
 Game g;
 int cont = 1;									//READ: controller, main, WRITE: main
 const int timeLimit = 500;
-int t = timeLimit;
-int paused = 0;			
+int t = timeLimit; 								//READ: main, WRITE: timingClock
+int timeWait = 0;								//READ: main, controller, WRITE: main
+int timeTill = 0;								//READ: main, controller, WRITE: main
+int paused = 0;									//READ: main, controller, WRITE: main
 int lives = 5;
-int movesLeft = 500;	
+int movesLeft = 500;
+int resetTime = 0;
+int powerUpOnScreen = 0;
+int poweredUp = 0;
+int points = 0; 								//READ: main, WRITE: controller (readPress), main (!readPress)
 
 const int height = 720;
 const int sizeBy24 = height/24;
@@ -39,8 +45,19 @@ void *timingClock(void *param) {
 	while(cont) {
 		if(t==0 || movesLeft==0 || lives == 0) 
 			cont = 0;							//end the game
-		while(paused);
-		t--;
+		while(paused || timeWait<timeTill);
+		if(resetTime) {
+			t = 500;
+			resetTime = 0;
+		}
+		if(t=300) {
+			powerUpOnScreen = 1;
+		}
+		if(poweredUp) 
+			t-=2;
+		else 
+			t--;
+		
 		delayMicroseconds(100000);
 	}
 	pthread_exit(0);
@@ -81,6 +98,10 @@ void *controls(void *param) {
 					pressed = 1;				//if pressed, rewrite the "Press a button"
 					readPress = 0;				//have not read this press yet
 					movesLeft--;
+					if(poweredUp) 
+						points+=20;
+					else
+						points+=10;
 				}
 			}
 			if(hold[i]>0)						//decrease spinlock value
@@ -128,7 +149,24 @@ int main()
 	generateGame(&g, width, height, widthBy24);		//ISSUE - constants not working
 	int levelChosen = 0;	
 	int currentLine = 0;
+	int updateLevel = 0;
+	int noPowerTimeYet = 1;
+
 	while(cont) {
+		if(updateLevel == 1) {					//inbetween levels
+			drawClearMem();
+			if(levelChosen<4)
+				levelChosen++;
+			else
+				printf("WINNER!!!!");
+			updateLevel = 0;
+			timeWait = 0;
+			timeTill = 10;
+			poweredUp = 0;
+			noPowerTimeYet = 1;
+			resetTime = 1;
+
+		}
 		if(!readPress) {
 			if(press == 3) {
 				paused = 1;						//enter pause menu here
@@ -136,6 +174,10 @@ int main()
 			}
 			if(!paused) {
 				currentLine = movePlayer(&g, levelChosen, width, press, widthBy24, bWidth); 
+				if(currentLine==0) {
+					updateLevel = 1;
+					points+=t;
+				}
 			}
 			readPress = 1;
 		}
@@ -146,13 +188,34 @@ int main()
 				moveToStart(&g, levelChosen, width, widthBy24, currentLine);
 				currentLine = 23;
 			}
+			if(powerUpOnScreen) {
+				if(collectPowerUp(&g, currentLine, levelChosen)) {
+					removePowerUp(&g);
+					powerUpOnScreen = 0;
+					poweredUp = 1;
+				}
+			}
 
 		}
-		drawBackground(&g, levelChosen);
-		drawSprites(&g, levelChosen);
-		drawTotal();
-		drawTime(t, timeLimit);
-		delayMicroseconds(42);
+		if(timeWait>=timeTill) {
+			drawBackground(&g, levelChosen);
+			drawSprites(&g, levelChosen);
+			if(powerUpOnScreen) {
+				if(noPowerTimeYet) {
+					setUpPowerUp(&g, movesLeft, currentLine);
+					noPowerTimeYet = 0;
+				}
+				drawPowerUp(&g);
+			}
+			drawTotal();
+			drawTime(t, timeLimit);
+			delayMicroseconds(42);
+		}
+		else {
+			drawBlank();
+			timeWait++;
+		}
+		
 	}
 
 	munmap(framebufferstruct.fptr, framebufferstruct.screenSize);

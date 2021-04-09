@@ -21,6 +21,8 @@ typedef struct Level {
 
 typedef struct Game {
 	Level levels[4];
+	GameSprite powerUp;
+	int powerUpLine;
 } Game;
 
 
@@ -32,6 +34,10 @@ void moveToStart(Game *g, int le, int w, int sw, int frog);
 int collision(Game* g, int le, int sw, int currLine, int frog);
 int movePlayer(Game* g, int le, int w, int press, int sw, int bw);
 int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine);
+void setUpPowerUp(Game* g, int steps, int currentLine);
+void removePowerUp(Game* g);
+int collectPowerUp(Game* g, int currentLine, int le);
+
 
 
 #endif

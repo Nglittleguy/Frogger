@@ -15,6 +15,9 @@ struct fbs framebufferstruct;
 void drawPixel(Pixel *pixel);
 void drawBackground(Game *g, int levelChosen);
 void drawSprites(Game *g, int levelChosen);
+void drawPowerUp(Game *g);
 void drawTime(int t, int tl);
 void drawTotal();
+void drawBlank();
+void drawClearMem();
 

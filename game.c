@@ -27,8 +27,36 @@ const int lineColours[4][24] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY
 								{GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, GRAY,
 								GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, GRAY},
 								
-								{GRAY, GRAY, RED, GREEN, RED, GRAY, GRAY, GREEN, CYAN, RED, GRAY, GRAY,
+								{GRAY, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GRAY, GREEN, GREEN,
 								GRAY, GRAY, RED, GREEN, RED, GRAY, GRAY, GREEN, CYAN, RED, GRAY, GRAY}};
+
+const int spriteStart[24][10] = 
+{
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 200, 600, 900, 1100, 1400, 1500, 1700, 2000, 2200},
+	{100, 300, 500, 600, 900, 1200, 1300, 1600, 1900, 2300},
+	{50, 450, 500, 750, 850, 1050, 1400, 1600, 1800, 2100},
+	{0, 150, 300, 500, 800, 1000, 1300, 1500, 2000, 2400},
+	{100, 400, 600, 900, 1000, 1300, 1400, 1800, 2100, 2300},
+	{50, 250, 500, 800, 1100, 1300, 1700, 1800, 2100, 2300}, 
+	{0, 200, 400, 800, 1000, 1200, 1400, 1700, 1900, 2200},
+	{100, 200, 500, 700, 1100, 1400, 1600, 1900, 2100, 2400},
+	{50, 300, 400, 700, 900, 1100, 1400, 1800, 2000, 2300},
+	{0, 300, 400, 700, 900, 1000, 1300, 1500, 1900, 2200},
+	{50, 450, 500, 750, 850, 1050, 1400, 1600, 1800, 2100},
+	{0, 150, 300, 500, 800, 1000, 1300, 1500, 2000, 2400},
+	{0, 200, 400, 800, 1000, 1200, 1400, 1700, 1900, 2200},
+	{100, 200, 500, 700, 1100, 1400, 1600, 1900, 2100, 2400},
+	{100, 400, 600, 900, 1000, 1300, 1400, 1800, 2100, 2300},
+	{50, 300, 400, 700, 900, 1100, 1400, 1800, 2000, 2300},
+	{0, 150, 300, 500, 800, 1000, 1300, 1500, 2000, 2400},
+	{0, 200, 600, 900, 1100, 1400, 1500, 1700, 2000, 2200},
+	{50, 250, 500, 800, 1100, 1300, 1700, 1800, 2100, 2300}, 
+	{100, 200, 500, 700, 1100, 1400, 1600, 1900, 2100, 2400},
+	{0, 150, 300, 500, 800, 1000, 1300, 1500, 2000, 2400},
+	{50, 450, 500, 750, 850, 1050, 1400, 1600, 1800, 2100},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+}
 
 
 const int spriteColours[4][24][10] = 
@@ -118,7 +146,7 @@ const int spriteColours[4][24][10] =
 	
 
 	{
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
 		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
 		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
@@ -141,16 +169,19 @@ const int spriteColours[4][24][10] =
 		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
 		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
 		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, FROG}
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG} 
 	},
 };
+
+GameSprite powerUp;
+int powerUpLine;
 
 void generateLine(Line* li, int le, int i, int w, int h, int sw) {
 
 	for(int k = 0; k<10; k++) {
 		GameSprite s;
 		s.code = spriteColours[le][i][k];
-		s.x = (k+1)*100 + 6*(k%4)*sw;
+		s.x = spriteStart[i][k];
 		if(s.code==FROG)
 			s.w = sw;
 		else
@@ -183,6 +214,12 @@ void generateGame(Game* g, int w, int h, int sw) {
 		le.code = i;
 		g->levels[i] = le;
 	}
+
+	g->powerUp.code = 0;
+	g->powerUp.x = 2000;
+	g->powerUp.w = sw;
+	g->powerUp.h = h;
+	g->powerUpLine = 0;
 
 }
 
@@ -281,13 +318,34 @@ int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine) {
 				continue;
 			}
 			g->levels[le].lines[i].sprites[j].x += g->levels[le].lines[i].direction * distTravelled;
-			if(g->levels[le].lines[i].sprites[j].x <= 0) {
-				g->levels[le].lines[i].sprites[j].x = 1300;				//loop em
-			}
+			if(g->levels[le].lines[i].sprites[j].x <= 0) 
+				g->levels[le].lines[i].sprites[j].x = 2500;				//loop up
+			
+			else if(g->levels[le].lines[i].sprites[j].x >= 2500)
+				g->levels[le].lines[i].sprites[j].x = 0;				//loop down
 			
 		}
 	}
 	return collision(g, le, sw, currentLine, g->levels[le].lines[currentLine].sprites[9].x);
+}
+
+void setUpPowerUp(Game* g, int steps, int currentLine) {
+	g->powerUpLine = (steps%22)+1;				//from 1 to 22
+	g->powerUp.x = (currentLine * steps) % 1200;
+}
+
+void removePowerUp(Game* g) {
+	g->powerUpLine = 0;
+	g->powerUp.x = 2000;
+}
+
+int collectPowerUp(Game* g, int currentLine, int le) {
+	if(g->powerUpLine == currentLine) {
+		int frog = g->levels[le].lines[currentLine].sprites[9].x;
+		if(g->powerUp.x < frog+sw && g->powerUp.x+2*sw > frog)	
+			return 1;
+	}
+	return 0;
 }
 
 
