@@ -37,6 +37,7 @@ int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine);
 void setUpPowerUp(Game* g, int steps, int currentLine);
 void removePowerUp(Game* g);
 int collectPowerUp(Game* g, int currentLine, int le);
+void changeLevel(Game g*, int le, int up);
 
 
 

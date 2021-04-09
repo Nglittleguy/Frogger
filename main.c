@@ -45,18 +45,15 @@ void *timingClock(void *param) {
 	while(cont) {
 		if(t==0 || movesLeft==0 || lives == 0) 
 			cont = 0;							//end the game
-		while(paused || timeWait<timeTill);
+		while(paused);
 		if(resetTime) {
-			t = 500;
+			//t = 500;
 			resetTime = 0;
 		}
-		if(t=300) {
+		if(t%100==0 && powerUpOnScreen == 0) {
 			powerUpOnScreen = 1;
 		}
-		if(poweredUp) 
-			t-=2;
-		else 
-			t--;
+		t--;
 		
 		delayMicroseconds(100000);
 	}
@@ -151,20 +148,29 @@ int main()
 	int currentLine = 0;
 	int updateLevel = 0;
 	int noPowerTimeYet = 1;
+	int oldLine = 0;
+	int goBackToLoop = 0;
 
 	while(cont) {
-		if(updateLevel == 1) {					//inbetween levels
+		if(updateLevel != 0) {					//inbetween levels
 			drawClearMem();
 			if(levelChosen<4)
-				levelChosen++;
-			else
+				levelChosen+=updateLevel;
+			else {
 				printf("WINNER!!!!");
+				cont = false;
+			}
+
+			if(powerUpOnScreen) {
+				removePowerUp(&g);
+				powerUpOnScreen = 0;
+			}
+
 			updateLevel = 0;
-			timeWait = 0;
-			timeTill = 10;
 			poweredUp = 0;
 			noPowerTimeYet = 1;
 			resetTime = 1;
+			goBackToLoop = 0;
 
 		}
 		if(!readPress) {
@@ -173,13 +179,20 @@ int main()
 
 			}
 			if(!paused) {
+				oldLine = currentLine;
 				currentLine = movePlayer(&g, levelChosen, width, press, widthBy24, bWidth); 
-				if(currentLine==0) {
+				if(oldLine == 0 && currentLine == 23){
 					updateLevel = 1;
-					points+=t;
+					goBackToLoop = 1;
+				}
+				else if(oldLine == 23 && currentLine == 0) {
+					updateLevel = -1;
+					goBackToLoop = 1;
 				}
 			}
 			readPress = 1;
+			if(goBackToLoop)
+				continue;
 		}
 		if(!paused) {
 			if(updateTime(&g, levelChosen, width, bWidth, widthBy24, currentLine)==0) {
@@ -197,24 +210,19 @@ int main()
 			}
 
 		}
-		if(timeWait>=timeTill) {
-			drawBackground(&g, levelChosen);
-			drawSprites(&g, levelChosen);
-			if(powerUpOnScreen) {
-				if(noPowerTimeYet) {
-					setUpPowerUp(&g, movesLeft, currentLine);
-					noPowerTimeYet = 0;
-				}
-				drawPowerUp(&g);
+		drawBackground(&g, levelChosen);
+		drawSprites(&g, levelChosen);
+		if(powerUpOnScreen) {
+			if(noPowerTimeYet) {
+				setUpPowerUp(&g, movesLeft, currentLine);
+				noPowerTimeYet = 0;
 			}
-			drawTotal();
-			drawTime(t, timeLimit);
-			delayMicroseconds(42);
+			drawPowerUp(&g);
 		}
-		else {
-			drawBlank();
-			timeWait++;
-		}
+		drawTotal();
+		drawTime(t, timeLimit);
+		delayMicroseconds(42);
+
 		
 	}
 
