@@ -2,7 +2,7 @@
 #define game
 
 typedef struct GameSprite{
-	int *code;
+	int code;
 	int x;
 	int w;
 	int h;

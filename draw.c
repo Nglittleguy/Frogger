@@ -42,16 +42,52 @@ void drawSprites(Game *g, int levelChosen) {
 	int w;
 	for(int i = 0; i<24; i++) {
 		for(int j = 0; j<10; j++) {
-			if(g->levels[levelChosen].lines[i].sprites[j].code != 0) {								//null spot, don't draw
+			if(g->levels[levelChosen].lines[i].sprites[j].code != 0) {						//null spot, don't draw
 				if(j==9)
 					w = 50; //widthBy24;
+					for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
+						for(int yOff = 0; yOff < sizeBy24; yOff++) {
+							if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720) {
+								oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+								= s_frog[yOff][xOff];
+							}
+							
+						}
+					}
 				else
 					w = 100; //widthBy24*2;
+				const int *spriteLoc[30][100];
+				switch(levelChosen) {
+					case 0:
+						if(g->levels[levelChosen].lines[i].direction == -1)
+							spriteLoc = &s_carLeft;
+						else
+							spriteLoc = &s_carRight;
+						break;
+					case 1:
+						if(g->levels[levelChosen].lines[i].direction == -1)
+							spriteLoc = &s_log;
+						else
+							spriteLoc = &s_lilypad;
+						break;
+					case 2:
+						if(g->levels[levelChosen].lines[i].direction == -1)
+							spriteLoc = &s_rocket;
+						else
+							spriteLoc = &s_satelite;
+						break;
+					case 3:
+						if(g->levels[levelChosen].lines[i].direction == -1)
+							spriteLoc = &s_leftLawnmower;
+						else
+							spriteLoc = &s_rightLawnmower;
+						break;
+				}
 				for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
 					for(int yOff = 0; yOff < sizeBy24; yOff++) {
 						if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720) {
 							oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
-							= *(g->levels[levelChosen].lines[i].sprites[j].code)[yOff][xOff];
+							= (*spriteLoc)[yOff][xOff];
 						}
 						
 					}
@@ -147,44 +183,77 @@ void drawPaused(int cursor) {
 
 void drawNumber(int x, int y, int n) {
 	int dig = n%10;
-	int *digPix;
 	switch(dig) {
 		case 0:	
-			digPix = s_0;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_0[yOff][xOff];
+				}
+			}
 			break;
 		case 1:
-			digPix = s_1;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_1[yOff][xOff];
+				}
+			}
 			break;
 		case 2:
-			digPix = s_2;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_2[yOff][xOff];
+				}
+			}
 			break;
 		case 3:
-			digPix = s_3;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_3[yOff][xOff];
+				}
+			}
 			break;
 		case 4:
-			digPix = s_4;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_4[yOff][xOff];
+				}
+			}
 			break;
 		case 5:
-			digPix = s_5;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_5[yOff][xOff];
+				}
+			}
 			break;
 		case 6:
-			digPix = s_6;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_6[yOff][xOff];
+				}
+			}
 			break;
 		case 7:
-			digPix = s_7;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_7[yOff][xOff];
+				}
+			}
 			break;
 		case 8:
-			digPix = s_8;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_8[yOff][xOff];
+				}
+			}
 			break;
 		case 9:
-			digPix = s_9;
+			for(int yOff = 0; yOff<35; yOff++) {
+				for(int xOff = 0; xOff<20; xOff++) {
+					oldColour[x+xOff][y+yOff] = s_9[yOff][xOff];
+				}
+			}
 			break;
-	}
-
-	for(int yOff = 0; yOff<35; yOff++) {
-		for(int xOff = 0; xOff<20; xOff++) {
-			oldColour[x+xOff][y+yOff] = digPix[yOff][xOff];
-		}
 	}
 
 	if(dig/10!=0) {
