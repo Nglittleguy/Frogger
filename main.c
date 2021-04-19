@@ -36,12 +36,6 @@ int poweredUp = 0;
 int points = 0; 								//READ: main, WRITE: controller (readPress), main (!readPress)
 int won = 0;						//winning flag is 1, losing is 2, skip is 0
 
-const int height = 720;
-const int sizeBy24 = height/24;
-const int width = 1280;
-const int widthBy24 = width/24;
-const int bWidth = 250;
-const int bHeight = 100;
 
 void *timingClock(void *param) {
 	printf("Time %d\n", t);
