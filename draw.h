@@ -20,4 +20,6 @@ void drawTime(int t, int tl);
 void drawTotal();
 void drawBlank();
 void drawClearMem();
-
+void drawBackgroundBlue();
+void drawNumber(int x, int y, int n);
+void drawPaused(int cursor);

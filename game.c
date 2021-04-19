@@ -1,6 +1,7 @@
 #include <wiringPi.h>
 #include <stdio.h>
 #include "game.h"
+#include "var.h"
 
 #define BLACK 0x0000
 #define BLUE 0x001F
@@ -59,117 +60,117 @@ const int spriteStart[24][10] =
 };
 
 
-const int spriteColours[4][24][10] = 
+const int *spriteColours[4][24][10] = 
 {
 	{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0},  
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0},
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0},
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0}, 
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0}, 
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0},  
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0}, 
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0},  
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0}, 
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0}, 
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0}, 
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0}, 
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0}, 
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0},  
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0},  
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0},
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{RED, RED, RED, RED, RED, RED, RED, RED, RED, 0}, 
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG} 
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0}, 
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0}, 
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0}, 
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0},  
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0},  
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0}, 
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0}, 
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0}, 
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0}, 
+		{s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, s_carRight, 0}, 
+		{s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, s_carLeft, 0},  
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, s_frog} 
 	},
 
 	{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0},
+		{s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, 0}, 
+		{s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0},
+		{s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, 0},
+		{s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, 0}, 
+		{s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0},
+		{s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, 0},
+		{s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, 0}, 
+		{s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 		
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},  
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0},
+		{s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, 0}, 
+		{s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},  
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0},
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0},
+		{s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, 0}, 
+		{s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, 0}, 
+		{s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, 0}, 
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},  
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0},
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, MAGENTA, 0}, 
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG} 
+		{s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, 0}, 
+		{s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, s_lilypad, 0},
+		{s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, s_log, 0}, 
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, s_frog} 
 	},
 
 	{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0},
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},  
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0},
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},  
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0},
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},  
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0},
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},  
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0},
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},  
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0}, 
-		{YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, YELLOW, 0},  
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG} 
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},  
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0},
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},  
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0},
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},  
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0},
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},   
+		{s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, s_satelite, 0}, 
+		{s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, s_rocket, 0},  
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, s_frog} 
 	},
 	
 
 	{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0},
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, ORANGE, 0}, 
-		{0, 0, 0, 0, 0, 0, 0, 0, 0, FROG} 
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0}, 
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0}, 
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0},  
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0}, 
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0}, 
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0}, 
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0}, 
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0},  
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0}, 
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0}, 
+		{s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, s_leftLawnmower, 0}, 
+		{s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, s_rightLawnmower, 0}, 
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, s_frog} 
 	},
 };
 
@@ -182,7 +183,7 @@ void generateLine(Line* li, int le, int i, int w, int h, int sw) {
 		GameSprite s;
 		s.code = spriteColours[le][i][k];
 		s.x = spriteStart[i][k];
-		if(s.code==FROG)
+		if(s.code==s_frog)
 			s.w = sw;
 		else
 			s.w = 2*sw;
@@ -190,7 +191,7 @@ void generateLine(Line* li, int le, int i, int w, int h, int sw) {
 		li->sprites[k]=s;
 	}
 
-	if(li->sprites[9].code==FROG) {
+	if(li->sprites[9].code==s_frog) {
 		li->sprites[9].x = w/2-sw;							//center the player
 	}
 
@@ -272,14 +273,14 @@ int collision(Game* g, int le, int sw, int currLine, int frog) {
 int movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 	int currentLine = 0;
 	for(int i = 0; i<n; i++) {
-		if(g->levels[le].lines[i].sprites[9].code==FROG)
+		if(g->levels[le].lines[i].sprites[9].code==s_frog)
 			currentLine = i;
 	}
 	switch(press) {
 		case 4:	//UP
 			//printf("UP");
 			if(currentLine!=0) {
-				g->levels[le].lines[currentLine-1].sprites[9].code = FROG;
+				g->levels[le].lines[currentLine-1].sprites[9].code = s_frog;
 				g->levels[le].lines[currentLine-1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
 				g->levels[le].lines[currentLine].sprites[9].code = 0;
 				currentLine = currentLine-1;
@@ -295,7 +296,7 @@ int movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 		case 5:	//DOWN
 			//printf("DOWN");
 			if(currentLine!=23) {
-				g->levels[le].lines[currentLine+1].sprites[9].code = FROG;
+				g->levels[le].lines[currentLine+1].sprites[9].code = s_frog;
 				g->levels[le].lines[currentLine+1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
 				g->levels[le].lines[currentLine].sprites[9].code = 0;
 				currentLine = currentLine+1;
@@ -335,7 +336,7 @@ void changeLevel(Game* g, int le, int up) {
 int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine) {
 	for(int i = 0; i<n; i++) {
 		for(int j = 0; j<10; j++) {
-			if(g->levels[le].lines[i].sprites[j].code == FROG && (le==0||le==3)) {	//don't move for levels 0 and 3
+			if(g->levels[le].lines[i].sprites[j].code == s_frog && (le==0||le==3)) {	//don't move for levels 0 and 3
 				continue;
 			}
 			g->levels[le].lines[i].sprites[j].x += g->levels[le].lines[i].direction * distTravelled;
