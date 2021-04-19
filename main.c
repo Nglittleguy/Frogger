@@ -159,6 +159,7 @@ int main()
 
 	while(cont) {
 		while(mainScreen) {
+			drawBackgroundBlue();
 			//drawMainScreen(cursor);
 
 			if(!readPress) {
@@ -331,6 +332,8 @@ int main()
 				drawTime(t, timeLimit);
 			}
 			else {
+				drawPaused(cursor);
+				drawTotal();
 				//paused menu screen draw
 			}
 
@@ -341,17 +344,21 @@ int main()
 		}
 
 		if(won!=0) {
+			drawBackgroundBlue();
 			if(won==1) {		//won the game
 				mainScreen = 1;
 				points += t+movesLeft+100*lives;
 				printf("Winner - won down there\n");
 				//DRAW STATS OF GAME WIN
+				//drawWinScreen();
+				drawNumber(760, 500, points);
 				
 			}
 			else if(won==2) {	//lost the game
 				//DRAW LOSER SCREEN
 				printf("Loser!! Haha!\n");
 				mainScreen = 1;
+				drawNumber(760, 500, 0);
 			}
 			resetTime = 1;
 			while(readPress);	//stay here until button press
