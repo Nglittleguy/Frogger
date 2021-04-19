@@ -268,7 +268,6 @@ int main()
 				}
 				//is paused
 				else {
-					printf("Paused: \n");
 					if(press==8) {		//press A
 						if(cursor) {		//Quit
 							printf("Pressed quit:\n");
@@ -360,6 +359,7 @@ int main()
 				mainScreen = 1;
 				drawNumber(760, 500, 0);
 			}
+			drawTotal();
 			resetTime = 1;
 			while(readPress);	//stay here until button press
 			readPress = 1;

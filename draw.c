@@ -43,54 +43,113 @@ void drawSprites(Game *g, int levelChosen) {
 	for(int i = 0; i<24; i++) {
 		for(int j = 0; j<10; j++) {
 			if(g->levels[levelChosen].lines[i].sprites[j].code != 0) {						//null spot, don't draw
-				if(j==9)
+				if(j==9) {
 					w = 50; //widthBy24;
 					for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
 						for(int yOff = 0; yOff < sizeBy24; yOff++) {
-							if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720) {
+							if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720 && s_frog[yOff][xOff]!=0) {
 								oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
 								= s_frog[yOff][xOff];
 							}
-							
 						}
 					}
-				else
-					w = 100; //widthBy24*2;
-				const int *spriteLoc[30][100];
-				switch(levelChosen) {
-					case 0:
-						if(g->levels[levelChosen].lines[i].direction == -1)
-							spriteLoc = &s_carLeft;
-						else
-							spriteLoc = &s_carRight;
-						break;
-					case 1:
-						if(g->levels[levelChosen].lines[i].direction == -1)
-							spriteLoc = &s_log;
-						else
-							spriteLoc = &s_lilypad;
-						break;
-					case 2:
-						if(g->levels[levelChosen].lines[i].direction == -1)
-							spriteLoc = &s_rocket;
-						else
-							spriteLoc = &s_satelite;
-						break;
-					case 3:
-						if(g->levels[levelChosen].lines[i].direction == -1)
-							spriteLoc = &s_leftLawnmower;
-						else
-							spriteLoc = &s_rightLawnmower;
-						break;
 				}
-				for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
-					for(int yOff = 0; yOff < sizeBy24; yOff++) {
-						if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720) {
-							oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
-							= (*spriteLoc)[yOff][xOff];
-						}
-						
-					}
+				else {
+					w = 100; //widthBy24*2;
+					switch(levelChosen) {
+						case 0:
+							if(g->levels[levelChosen].lines[i].direction == -1) {
+								for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
+									for(int yOff = 0; yOff < sizeBy24; yOff++) {
+										if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720 && s_carLeft[yOff][xOff]!=0) {
+											oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+											= s_carLeft[yOff][xOff];
+										}
+									}
+								}
+							}
+
+							else {
+								for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
+									for(int yOff = 0; yOff < sizeBy24; yOff++) {
+										if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720 && s_carRight[yOff][xOff]!=0) {
+											oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+											= s_carRight[yOff][xOff];
+										}
+									}
+								}
+							}
+							break;
+						case 1:
+							if(g->levels[levelChosen].lines[i].direction == -1) {
+								for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
+									for(int yOff = 0; yOff < sizeBy24; yOff++) {
+										if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720 && s_log[yOff][xOff]!=0) {
+											oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+											= s_log[yOff][xOff];
+										}
+									}
+								}
+							}
+
+							else {
+								for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
+									for(int yOff = 0; yOff < sizeBy24; yOff++) {
+										if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720 && s_lilypad[yOff][xOff]!=0) {
+											oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+											= s_lilypad[yOff][xOff];
+										}
+									}
+								}
+							}
+							break;
+						case 2:
+							if(g->levels[levelChosen].lines[i].direction == -1) {
+								for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
+									for(int yOff = 0; yOff < sizeBy24; yOff++) {
+										if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720 && s_rocket[yOff][xOff]!=0) {
+											oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+											= s_rocket[yOff][xOff];
+										}
+									}
+								}
+							}
+
+							else {
+								for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
+									for(int yOff = 0; yOff < sizeBy24; yOff++) {
+										if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720 && s_satelite[yOff][xOff]!=0) {
+											oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+											= s_satelite[yOff][xOff];
+										}
+									}
+								}
+							}
+							break;
+						case 3:
+							if(g->levels[levelChosen].lines[i].direction == -1) {
+								for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
+									for(int yOff = 0; yOff < sizeBy24; yOff++) {
+										if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720 && s_leftLawnmower[yOff][xOff]!=0) {
+											oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+											= s_leftLawnmower[yOff][xOff];
+										}
+									}
+								}
+							}
+
+							else {
+								for(int xOff = 0; xOff < w; xOff++) {										//draw sprite size
+									for(int yOff = 0; yOff < sizeBy24; yOff++) {
+										if(g->levels[levelChosen].lines[i].sprites[j].x + xOff < 1280 && sizeBy24 * i + yOff<720 && s_rightLawnmower[yOff][xOff]!=0) {
+											oldColour[g->levels[levelChosen].lines[i].sprites[j].x + xOff][sizeBy24 * i + yOff] 
+											= s_rightLawnmower[yOff][xOff];
+										}
+									}
+								}
+							}
+							break;
+					}					
 				}
 			}
 		}
@@ -158,24 +217,26 @@ void drawBackgroundBlue() {
 		for (int x = 0; x < width; x++) 
 			oldColour[x][y] = 0x1905;
 	}
+	drawTotal();
 }
 
 void drawPaused(int cursor) {
-	for(int y = 0; y<760; y++) {
-		for(int x = 0; x<570; x++) 
+	for(int y = 0; y<570; y++) {
+		for(int x = 0; x<760; x++) 
 			oldColour[260+x][75+y] = s_paused[y][x];
 		
 	}
+	//
 	if(cursor==0) {
 		for(int y = 0; y<100; y++) {
 			for(int x = 0; x<300; x++) 
-				oldColour[490+x][330+y] = s_restart[y][x];
+				oldColour[490+x][320+y] = s_restart[y][x];
 		}
 	}
 	else {
 		for(int y = 0; y<100; y++) {
 			for(int x = 0; x<300; x++) 
-				oldColour[490+x][450+y] = s_quit[y][x];
+				oldColour[490+x][440+y] = s_quit[y][x];
 		}
 	}
 	//change these offsets to get it right
@@ -256,7 +317,7 @@ void drawNumber(int x, int y, int n) {
 			break;
 	}
 
-	if(dig/10!=0) {
+	if(n/10>0) {
 		drawNumber(x-20, y, n/10);
 	}
 }
