@@ -23,3 +23,7 @@ void drawClearMem();
 void drawBackgroundBlue();
 void drawNumber(int x, int y, int n);
 void drawPaused(int cursor);
+void drawMainScreen(int cursor);
+void drawWinScreen();
+void drawLostScreen();
+void drawInfo(int t, int movesLeft, int lives);

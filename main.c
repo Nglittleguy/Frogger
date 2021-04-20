@@ -99,10 +99,6 @@ void *controls(void *param) {
 					pressed = 1;				//if pressed, rewrite the "Press a button"
 					readPress = 0;				//have not read this press yet
 					movesLeft--;
-					if(poweredUp) 
-						points+=20;
-					else
-						points+=10;
 				}
 			}
 			if(hold[i]>0)						//decrease spinlock value
@@ -160,10 +156,10 @@ int main()
 	while(cont) {
 		while(mainScreen) {
 			drawBackgroundBlue();
-			//drawMainScreen(cursor);
+			drawMainScreen(cursor);
 
 			if(!readPress) {
-				printf("Main menu, waiting for...\n");
+				//printf("Main menu, waiting for...\n");
 				printMessage(press);
 				if(press==8) {			//press A
 					if(cursor) {		//Quit
@@ -172,22 +168,22 @@ int main()
 						contGame = 0;
 						cont = 0;
 						mainScreen = 0;
-						printf("Leave game:\n");
+						//printf("Leave game:\n");
 					}
 					else {				//Start Game
 						contGame = 1;
 						mainScreen = 0;
-						printf("start game:\n");
+						//printf("start game:\n");
 					}
 					restart = 0;
 				}
 				else if(press==4){	//press Up 
-					printf("Start game\n");
+					//printf("Start game\n");
 					if(cursor==1)
 						cursor=0;
 				}
 				else if(press==5) {	//press Down
-					printf("Quit game\n");
+					//printf("Quit game\n");
 					if(cursor==0)
 						cursor=1;
 				}
@@ -199,7 +195,7 @@ int main()
 		if(restart) {
 			restart = 0;
 			contGame = 1;
-			printf("RESTARTING\n");
+			//printf("RESTARTING\n");
 		}
 
 		paused = 0;
@@ -212,7 +208,7 @@ int main()
 		oldLine = 23;
 		goBackToLoop = 0;
 		generateGame(&g, width, height, widthBy24);
-		printf("I am winner! %d\n", won);
+		//printf("I am winner! %d\n", won);
 		while(contGame) {
 			//In between Levels
 			if(updateLevel != 0) {	
@@ -221,7 +217,7 @@ int main()
 					levelChosen+=updateLevel;
 				else {
 					//Congratulation, Winner!
-					printf("WINNER!!!! %d - %d - %d\n", t, movesLeft, lives);
+					//printf("WINNER!!!! %d - %d - %d\n", t, movesLeft, lives);
 					if(contGame) {						//only 1 can change won flag (mutex)
 						won = 1;
 						contGame = 0;
@@ -314,6 +310,7 @@ int main()
 						removePowerUp(&g);
 						powerUpOnScreen = 0;
 						poweredUp = 1;
+						lives++;
 					}
 				}
 
@@ -327,6 +324,7 @@ int main()
 					}
 					drawPowerUp(&g);
 				}
+				drawInfo(t, movesLeft, lives);
 				drawTotal();
 				drawTime(t, timeLimit);
 			}
@@ -349,15 +347,15 @@ int main()
 				points += t+movesLeft+100*lives;
 				printf("Winner - won down there\n");
 				//DRAW STATS OF GAME WIN
-				//drawWinScreen();
-				drawNumber(760, 500, points);
+				drawWinScreen();
+				drawNumber(400, 800, points);
 				
 			}
 			else if(won==2) {	//lost the game
 				//DRAW LOSER SCREEN
 				printf("Loser!! Haha!\n");
 				mainScreen = 1;
-				drawNumber(760, 500, 0);
+				drawLostScreen();
 			}
 			drawTotal();
 			resetTime = 1;

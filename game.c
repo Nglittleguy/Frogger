@@ -6,6 +6,7 @@
 #define BLUE 0x001F
 #define RED 0xF800
 #define GREEN 0x07E0
+#define DARKGREEN 0x4BC4
 #define CYAN 0x07FF
 #define MAGENTA 0xF81F
 #define YELLOW 0xFFE0
@@ -13,7 +14,7 @@
 #define FROG 0xFFFF
 #define ORANGE 0XFC40
 #define GRAY 0x9492
-#define SKYBLUE 0x56BF
+#define DARKGRAY 0x2104
 // http://www.barth-dev.de/online/rgb565-color-picker/
 const int n = 24;
 const int distTravelled = 10;
@@ -24,11 +25,11 @@ const int lineColours[4][24] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY
 								{GREEN, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN,
 								GREEN, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN, BLUE, BLUE, BLUE, GREEN},
 								
-								{GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE,
-								GRAY, GRAY, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, SKYBLUE, GRAY},
+								{GRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY,
+								GRAY, GRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, DARKGRAY, GRAY},
 								
-								{GRAY, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GREEN, GRAY, GREEN, GREEN,
-								GRAY, GRAY, RED, GREEN, RED, GRAY, GRAY, GREEN, CYAN, RED, GRAY, GRAY}};
+								{GRAY, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN,
+								DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, GRAY}};
 
 const int spriteStart[24][10] = 
 {
@@ -58,7 +59,7 @@ const int spriteStart[24][10] =
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
 
-
+//Colours no longer used - replaced with sprites
 const int spriteColours[4][24][10] = 
 {
 	{
@@ -359,7 +360,7 @@ int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine) {
 
 void setUpPowerUp(Game* g, int steps, int currentLine) {
 	g->powerUpLine = (steps%22)+1;				//from 1 to 22
-	g->powerUp.x = (currentLine * steps) % 1200;
+	g->powerUp.x = (currentLine * steps) % 1100;
 }
 
 void removePowerUp(Game* g) {
