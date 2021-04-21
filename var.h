@@ -1,3 +1,8 @@
+/*
+Default External Values - var.h
+- Stephen Ng 30038689
+*/
+
 extern const int height;
 extern const int sizeBy24;
 extern const int width;

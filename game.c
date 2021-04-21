@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include "game.h"
 
+/*
+Program to handle game logic and functionality - game.c
+- Stephen Ng 30038689
+*/
+
 #define BLACK 0x0000
 #define BLUE 0x001F
 #define RED 0xF800
@@ -16,9 +21,12 @@
 #define GRAY 0x9492
 #define DARKGRAY 0x2104
 // http://www.barth-dev.de/online/rgb565-color-picker/
-const int n = 24;
-const int distTravelled = 10;
 
+//Default values:
+const int n = 24;					//number of lines per level
+const int distTravelled = 10;		//distance of pixels travelled left/right per tick
+
+//line colours per level
 const int lineColours[4][24] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GREEN, 
 								GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GREEN},
 								
@@ -31,6 +39,7 @@ const int lineColours[4][24] = {{GREEN, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY, GRAY
 								{GRAY, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN,
 								DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, DARKGREEN, GRAY}};
 
+//sprite start locations (pseudo random looking, while still being playable)
 const int spriteStart[24][10] = 
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -59,7 +68,7 @@ const int spriteStart[24][10] =
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
 
-//Colours no longer used - replaced with sprites
+//Colours no longer used - replaced with sprites in var.c
 const int spriteColours[4][24][10] = 
 {
 	{
@@ -177,45 +186,49 @@ const int spriteColours[4][24][10] =
 GameSprite powerUp;
 int powerUpLine;
 
+//Populates a line based on parameters
 void generateLine(Line* li, int le, int i, int w, int h, int sw) {
 
-	for(int k = 0; k<10; k++) {
+	for(int k = 0; k<10; k++) {								//10 sprites
 		GameSprite s;
-		s.code = spriteColours[le][i][k];
-		s.x = spriteStart[i][k];
+		s.code = spriteColours[le][i][k];					//set the code to know if not frog
+		s.x = spriteStart[i][k];							//set the sprite's starting location
+		//width of the sprite
 		if(s.code==FROG)
 			s.w = sw;
 		else
 			s.w = 2*sw;
+		//height of sprite
 		s.h = h;
-		li->sprites[k]=s;
+		li->sprites[k]=s;									//log the sprite into the line
 	}
 
 	if(li->sprites[9].code==FROG) {
 		li->sprites[9].x = w/2-sw;							//center the player
 	}
 
-	li->colour = lineColours[le][i];
+	li->colour = lineColours[le][i];						//set the colour of the line
 	if(li->sprites[0].code==0)
-		li->direction = 0;									//stationary sections
+		li->direction = 0;									//stationary sections (no sprites)
 	else
 		li->direction = ((i+le)%2)*2-1;						//either 1, -1
 }
 
-
+//Populates the game (all levels)
 void generateGame(Game* g, int w, int h, int sw) {
 
-	for(int i = 0; i<4; i++) {
+	for(int i = 0; i<4; i++) {								//4 levels
 		Level le;
-		for(int j = 0; j<n; j++) {
+		for(int j = 0; j<n; j++) { 							//n number of lines
 			Line li;
 			generateLine(&li, i, j, w, h, sw);
-			le.lines[j] = li;
+			le.lines[j] = li;								//log the line to the level
 		}
 		le.code = i;
-		g->levels[i] = le;
+		g->levels[i] = le;									//log the level to the game
 	}
 
+	//setting default valuePack values
 	g->powerUp.code = 0;
 	g->powerUp.x = 2000;
 	g->powerUp.w = sw;
@@ -224,14 +237,14 @@ void generateGame(Game* g, int w, int h, int sw) {
 
 }
 
-
+//Moves the player to the center of the first row of the level
 void moveToStart(Game *g, int le, int w, int sw, int frog) {
-	g->levels[le].lines[frog].sprites[9].code = 0;
-	g->levels[le].lines[23].sprites[9].code = FROG;
-	g->levels[le].lines[23].sprites[9].x = w/2-sw;
+	g->levels[le].lines[frog].sprites[9].code = 0;			//remove sprite from line
+	g->levels[le].lines[23].sprites[9].code = FROG;			//put in the starting line
+	g->levels[le].lines[23].sprites[9].x = w/2-sw; 			//put in the middle
 }
 
-
+//Detects collisions of the player with the terrain
 int collision(Game* g, int le, int sw, int currLine, int frog) {
 	int alive;
 	int bounds;
@@ -245,9 +258,9 @@ int collision(Game* g, int le, int sw, int currLine, int frog) {
 				return 1;
 			for(int i = 0; i<9; i++) {
 				bounds = g->levels[le].lines[currLine].sprites[i].x;  	//only need to check line with frog
- 				if(bounds < frog+sw && bounds+2*sw > frog)	{		
+ 				//if contact, then dead
+ 				if(bounds < frog+sw && bounds+2*sw > frog)	
 					alive = 0;
-				}
 			}
 			break;
 		
@@ -259,6 +272,7 @@ int collision(Game* g, int le, int sw, int currLine, int frog) {
 				return 1;
 			for(int i = 0; i<9; i++) {
 				bounds = g->levels[le].lines[currLine].sprites[i].x;  	//only need to check line with frog
+ 				//if contact, then survives
  				if(bounds < frog+sw && bounds+2*sw > frog)	{		
 					alive = 1;
 				}
@@ -269,105 +283,112 @@ int collision(Game* g, int le, int sw, int currLine, int frog) {
 	return alive;
 }
 
-
+//Moves the player if possible
 int movePlayer(Game* g, int le, int w, int press, int sw, int bw) {
 	int currentLine = 0;
+	//find the current line of the player
 	for(int i = 0; i<n; i++) {
 		if(g->levels[le].lines[i].sprites[9].code==FROG)
 			currentLine = i;
 	}
 	switch(press) {
-		case 4:	//UP
-			//printf("UP");
-			if(currentLine!=0) {
+		case 4:	//UP;
+			if(currentLine!=0) {	
+				//if not at the top line, then move the frog up a line
 				g->levels[le].lines[currentLine-1].sprites[9].code = FROG;
 				g->levels[le].lines[currentLine-1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
 				g->levels[le].lines[currentLine].sprites[9].code = 0;
 				currentLine = currentLine-1;
 			}
 			else if(le!=3) {
+				//if not the last level, then move the frog to the next level
 				changeLevel(g, le, 1);
 				return 23;
 			}
 			else if(le==3) {
+				//if the last level, then don't change the level
 				return 23;
 			}
 			break;
 		case 5:	//DOWN
-			//printf("DOWN");
 			if(currentLine!=23) {
+				//if not the bottom line, then move the frog down a line
 				g->levels[le].lines[currentLine+1].sprites[9].code = FROG;
 				g->levels[le].lines[currentLine+1].sprites[9].x = g->levels[le].lines[currentLine].sprites[9].x;
 				g->levels[le].lines[currentLine].sprites[9].code = 0;
 				currentLine = currentLine+1;
 			}
 			else if(le!=0) {
+				//if not the first level, then change the level
 				changeLevel(g, le, 0);
 				return 0;
 			}
 			break;
 		case 6: //LEFT
-			//printf("LEFT");
-			if(g->levels[le].lines[currentLine].sprites[9].x - sw >= 0) {
+			if(g->levels[le].lines[currentLine].sprites[9].x - sw >= 0) 
 				g->levels[le].lines[currentLine].sprites[9].x -= sw;
-			}
+				//if not move out of bounds, then move it left
 			break;
 		case 7: //RIGHT
-			//printf("RIGHT");
-			if(g->levels[le].lines[currentLine].sprites[9].x + sw <= w) {
+			if(g->levels[le].lines[currentLine].sprites[9].x + sw <= w)
 				g->levels[le].lines[currentLine].sprites[9].x += sw;
-			}
+				//if not move out of bounds, then move it right
 			break;
 	}
 	return currentLine;
-	
 }
 
+//Move from 1 level to another
 void changeLevel(Game* g, int le, int up) {
-	if(up) {
+	//set the position of the frog in the next level in the same position as the last level's frog
+	if(up) 
 		g->levels[le+1].lines[23].sprites[9].x = g->levels[le].lines[0].sprites[9].x;
-	}
-	else {
+	else 
 		g->levels[le-1].lines[0].sprites[9].x = g->levels[le].lines[23].sprites[9].x;
-	}
-
 }
 
+//Move level items as time passes
 int updateTime(Game* g, int le, int w, int bw, int sw, int currentLine) {
+	//for every line and every sprite
 	for(int i = 0; i<n; i++) {
 		for(int j = 0; j<10; j++) {
-			if(g->levels[le].lines[i].sprites[j].code == FROG && (le==0||le==3)) {	//don't move for levels 0 and 3
+			//don't move for levels 0 and 3
+			if(g->levels[le].lines[i].sprites[j].code == FROG && (le==0||le==3)) 
 				continue;
-			}
+
+			//move the sprite in the direction of the line
 			g->levels[le].lines[i].sprites[j].x += g->levels[le].lines[i].direction * distTravelled;
+			
 			if(g->levels[le].lines[i].sprites[j].x <= 0) 
-				g->levels[le].lines[i].sprites[j].x = 3500;				//loop up
+				g->levels[le].lines[i].sprites[j].x = 3500;				//loop back to right
 			
 			else if(g->levels[le].lines[i].sprites[j].x >= 3500)
-				g->levels[le].lines[i].sprites[j].x = 0;				//loop down
+				g->levels[le].lines[i].sprites[j].x = 0;				//loop back to left
 
-			if(g->levels[le].lines[currentLine].sprites[9].x < 0) {
+			//maintain the frog stays within bounds even if carried off
+			if(g->levels[le].lines[currentLine].sprites[9].x < 0) 
 				g->levels[le].lines[currentLine].sprites[9].x += distTravelled;
-			}
-			if(g->levels[le].lines[currentLine].sprites[9].x + sw > w) {
+			if(g->levels[le].lines[currentLine].sprites[9].x + sw > w) 
 				g->levels[le].lines[currentLine].sprites[9].x -= distTravelled;
-			}
-			
 		}
 	}
+	//check if the frog is still alive after the this update
 	return collision(g, le, sw, currentLine, g->levels[le].lines[currentLine].sprites[9].x);
 }
 
+//Initialize the position of the valuePack given state of game (pseudo-random)
 void setUpPowerUp(Game* g, int steps, int currentLine) {
-	g->powerUpLine = (steps%22)+1;				//from 1 to 22
-	g->powerUp.x = (currentLine * steps) % 1100;
+	g->powerUpLine = (steps%22)+1;										//from 1 to 22
+	g->powerUp.x = (currentLine * steps) % 1100;						//within bounds
 }
 
+//Move the valuePack values off screen
 void removePowerUp(Game* g) {
 	g->powerUpLine = 0;
 	g->powerUp.x = 3000;
 }
 
+//Check if the player collides with the valuePack
 int collectPowerUp(Game* g, int currentLine, int le, int sw) {
 	if(g->powerUpLine == currentLine) {
 		int frog = g->levels[le].lines[currentLine].sprites[9].x;

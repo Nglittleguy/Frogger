@@ -1,6 +1,11 @@
 #ifndef game
 #define game
 
+/*
+Program to handle game logic and functionality - game.h
+- Stephen Ng 30038689
+*/
+
 typedef struct GameSprite{
 	int code;
 	int x;
@@ -27,7 +32,6 @@ typedef struct Game {
 
 
 int levelSelect;
-//void generateSprites(GameSprite* gs);
 void generateLine(Line* li, int le, int i, int w, int h, int sw);
 void generateGame(Game* g, int w, int h, int sw);
 void moveToStart(Game *g, int le, int w, int sw, int frog);
@@ -38,7 +42,6 @@ void setUpPowerUp(Game* g, int steps, int currentLine);
 void removePowerUp(Game* g);
 int collectPowerUp(Game* g, int currentLine, int le, int sw);
 void changeLevel(Game* g, int le, int up);
-
 
 
 #endif
