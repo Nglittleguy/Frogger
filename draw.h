@@ -4,6 +4,12 @@
 #include "framebuffer.h"
 #include "game.h"
 
+/*
+Program to draw to screen - draw.c
+- modified from DrawBlock
+- Stephen Ng 30038689
+*/
+
 /* Definitions */
 typedef struct {
 	int colour;

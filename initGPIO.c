@@ -4,6 +4,11 @@
 #include "initGPIO.h"
 
 /*
+Initializes the GPIO pins of the Raspberry Pi
+- Stephen Ng 30038689
+*/
+
+/*
 Retrieves the pointer to the general purpose input output pins address in mapped memory from the pi
 Returns - the address of the gpio base address
 */

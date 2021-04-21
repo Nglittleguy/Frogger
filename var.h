@@ -52,6 +52,7 @@ extern const int s_points[35][200];
 
 extern const int s_time[50][80];
 extern const int s_moves[50][80];
+extern const int s_score[50][80];
 extern const int s_lives[50][80];
 
 

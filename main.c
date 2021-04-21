@@ -27,7 +27,7 @@ int readPress;									//flag to coordinate thread (mutex) controller (1), main 
 int cont = 1;									//READ: controller, main, WRITE: main
 int contGame = 0;
 const int timeLimit = 2000;
-int tEnter = 2000;
+int tEnter = 2000-300;
 int t = timeLimit; 								//READ: main, WRITE: timingClock
 int lives = 5;									
 int movesLeft = 400;
@@ -199,12 +199,13 @@ int main()
 		//setting default values
 		paused = 0;
 		resetTime = 1;
-		tEnter = t-300;
 		delayMicroseconds(100000);	
+		tEnter = t-300;
 		levelChosen = 0;
 		currentLine = 23;
 		updateLevel = 0;
 		noPowerTimeYet = 1;
+		powerUpOnScreen = 0;
 		oldLine = 23;
 		goBackToLoop = 0;
 		//create a new game state
@@ -277,6 +278,7 @@ int main()
 							restart = 1;
 							mainScreen = 0;
 							cursor = 0;
+							removePowerUp(&g);
 						}
 					}
 					else if(press==4){						//press Up (Restart)

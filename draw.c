@@ -429,7 +429,7 @@ void drawInfo(int t, int movesLeft, int lives) {
 			oldColour[1200+x][340+y] = s_score[y][x];
 	}
 	//Draws the current score (time remaining + moves left + 100*lives)
-	drawNumber(1240, 410, t + movesLeft + 100 * lives);
+	drawNumber(1260, 410, t + movesLeft + 100 * lives);
 
 	//Draws "Lives"
 	for(int y = 0; y<50; y++) {
