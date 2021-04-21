@@ -414,20 +414,32 @@ void drawInfo(int t, int movesLeft, int lives) {
 	}
 	//Draws the time/10 (seconds remaining)
 	drawNumber(1250, 70, t/10);
+
 	//Draws "Moves left"
 	for(int y = 0; y<50; y++) {
 		for(int x = 0; x<80; x++) 
-			oldColour[1200+x][200+y] = s_moves[y][x];
+			oldColour[1200+x][170+y] = s_moves[y][x];
 	}
 	//Draws the number of moves left
-	drawNumber(1250, 270, movesLeft);
+	drawNumber(1250, 240, movesLeft);
+
+	//Draws "Score"
+	for(int y = 0; y<50; y++) {
+		for(int x = 0; x<80; x++) 
+			oldColour[1200+x][340+y] = s_score[y][x];
+	}
+	//Draws the current score (time remaining + moves left + 100*lives)
+	drawNumber(1240, 410, t + movesLeft + 100 * lives);
+
 	//Draws "Lives"
 	for(int y = 0; y<50; y++) {
 		for(int x = 0; x<80; x++) 
-			oldColour[1200+x][400+y] = s_lives[y][x];
+			oldColour[1200+x][510+y] = s_lives[y][x];
 	}
 	//Draws the number of lives left
-	drawNumber(1240, 470, lives);
+	drawNumber(1240, 580, lives);
+
+
 }
 
 //Draws a number given a x and y starting coordinate

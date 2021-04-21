@@ -27,6 +27,7 @@ int readPress;									//flag to coordinate thread (mutex) controller (1), main 
 int cont = 1;									//READ: controller, main, WRITE: main
 int contGame = 0;
 const int timeLimit = 2000;
+int tEnter = 2000;
 int t = timeLimit; 								//READ: main, WRITE: timingClock
 int lives = 5;									
 int movesLeft = 400;
@@ -60,7 +61,7 @@ void *timingClock(void *param) {
 			resetTime = 0;
 		}
 		//if the value pack should be introduced
-		if(t<2000 && t%100==0 && powerUpOnScreen == 0) {
+		if(t < tEnter && powerUpOnScreen == 0) {
 			powerUpOnScreen = 1;
 		}
 
@@ -198,6 +199,7 @@ int main()
 		//setting default values
 		paused = 0;
 		resetTime = 1;
+		tEnter = t-300;
 		delayMicroseconds(100000);	
 		levelChosen = 0;
 		currentLine = 23;
@@ -230,6 +232,7 @@ int main()
 				poweredUp = 0;
 				noPowerTimeYet = 1;
 				goBackToLoop = 0;
+				tEnter = t-300;
 			}
 
 			//Reading an input
@@ -308,6 +311,7 @@ int main()
 						poweredUp = 1;
 						lives++;
 						t+=100;
+						tEnter = t-300;
 					}
 				}
 
@@ -343,7 +347,7 @@ int main()
 			drawBackgroundBlue();
 			if(won==1) {									//won the game
 				mainScreen = 1;
-				points += t+movesLeft+100*lives;			//calculate points
+				points = t+movesLeft+100*lives;				//calculate points
 				drawWinScreen();
 				drawNumber(600, 400, points);				//draw points calculated
 			}
